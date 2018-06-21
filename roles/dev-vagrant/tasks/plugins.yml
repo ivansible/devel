@@ -1,0 +1,47 @@
+---
+- set_fact:
+    plugins_need_update:
+      "(vagrant_deb_result | default({})) is changed
+       or (vagrant_ppa_result | default({})) is changed
+       or vagrant_allow_reinstall | bool == true"
+
+- name: repair vagrant plugins
+  command: vagrant plugin repair
+  changed_when: false
+  when: plugins_need_update
+
+- name: update vagrant plugins
+  command: vagrant plugin update
+  changed_when: false
+  when: plugins_need_update
+
+- name: list installed plugins
+  command: vagrant plugin list
+  changed_when: false
+  register: plugin_list_result
+
+- name: extract installed plugins from output
+  set_fact:
+    plugins_present: "{{ plugin_list_result.stdout_lines
+                       | select('match', '^vagrant-')
+                       | map('regex_search', '^[^ ]+')
+                       | list }}"
+
+- name: find plugins to install
+  set_fact:
+    plugins_new: "{{ vagrant_plugin_list
+                   | difference(plugins_present) }}"
+
+- name: display plugins to install
+  debug:
+    msg:
+      - "vagrant plugins:"
+      - "required: {{ vagrant_plugin_list | join(',') }}"
+      - "present:  {{ plugins_present | join(',') }}"
+      - "new:      {{ plugins_new | join(',') }}"
+  when: "plugins_new | length > 0"
+
+- name: install vagrant plugins
+  command: vagrant plugin install {{ item }}
+  loop: "{{ plugins_new }}"
+...

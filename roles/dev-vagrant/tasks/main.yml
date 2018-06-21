@@ -1,2 +1,13 @@
 ---
 # tasks file for ivansible.dev-vagrant
+- setup:
+
+- import_tasks: vagrant.yml
+  become: yes
+  tags: dev_vagrant
+
+- import_tasks: plugins.yml
+  become: no
+  when: "'workspace' in group_names"
+  tags: dev_vagplugins
+...

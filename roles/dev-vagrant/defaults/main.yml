@@ -1,2 +1,10 @@
 ---
 # defaults file for ivansible.dev-vagrant
+
+vagrant_allow_reinstall: no
+
+# can be `ppa` (not recommended), `latest`, or url of `.deb` package
+vagrant_package_url: latest
+
+vagrant_plugin_list: []
+...

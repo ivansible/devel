@@ -1,0 +1,33 @@
+---
+- name: detect latest vagrant release
+  uri:
+    url: https://www.vagrantup.com/downloads.html
+    connection: local
+    return_content: yes
+  register: latest_vagrant_release
+  when: vagrant_package_url == 'latest'
+
+- name: check whether plugins need a repair
+  set_fact:
+    vagrant_package_url: "{{ latest_vagrant_release.content
+                           | regex_search('https://[^\"]+64\\.deb') }}"
+  when: latest_vagrant_release is not skipped
+
+- debug:
+    msg: "latest vagrant release: {{ vagrant_package_url | basename }}"
+  run_once: true
+  when: latest_vagrant_release is not skipped
+
+- name: install vagrant package from url
+  apt:
+    deb: "{{ vagrant_package_url }}"
+    only_upgrade: "{{ vagrant_allow_reinstall | bool == false }}"
+  when: vagrant_package_url != 'ppa'
+  register: vagrant_deb_result
+
+- name: install vagrant from ppa
+  apt:
+    name: vagrant
+  when: vagrant_package_url == 'ppa'
+  register: vagrant_ppa_result
+...

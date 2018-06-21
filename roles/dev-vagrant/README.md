@@ -1,38 +1,58 @@
-Role Name
-=========
+# Role ivansible.dev-vagrant
 
-A brief description of the role goes here.
+Install vagrant and plugins.
+See instructions here: https://www.vagrantup.com/docs/installation/
 
-Requirements
-------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Requirements
 
-Role Variables
---------------
+None
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
-Dependencies
-------------
+## Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Available variables are listed below, along with default values.
 
-Example Playbook
-----------------
+    vagrant_package_url: latest
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+This can be one of:
+ `ppa` (not recommended),
+ `latest` (see here: https://www.vagrantup.com/downloads.html),
+ url of vagrant `.deb` package.
 
-    - hosts: servers
+    vagrant_plugin_list: []
+
+If the target host belongs to the `workspace` group, a number of vagrant
+plugins will be installed locally for target user.
+
+    vagrant_allow_reinstall: no
+
+Allows to refresh already downloaded redistributables.
+
+
+## Tags
+
+- `dev_vagrant`
+- `dev_vagplugins`
+
+
+## Dependencies
+
+None
+
+
+## Example Playbook
+
+    - hosts: dock2
       roles:
-         - { role: username.rolename, x: 42 }
+        - role: ivansible.dev-vagrant
 
-License
--------
 
-BSD
+## License
 
-Author Information
-------------------
+MIT
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+## Author Information
+
+Created in 2018 by [IvanSible](https://github.com/ivansible)
