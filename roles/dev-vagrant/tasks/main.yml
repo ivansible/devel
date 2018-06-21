@@ -2,8 +2,17 @@
 # tasks file for ivansible.dev-vagrant
 - setup:
 
+- name: vagrant from ppa (not recommended)
+  apt:
+    name: vagrant
+  become: yes
+  when: vagrant_package_url == 'ppa'
+  register: vagrant_ppa_result
+  tags: dev_vagrant
+
 - import_tasks: vagrant.yml
   become: yes
+  when: vagrant_package_url != 'ppa'
   tags: dev_vagrant
 
 - import_tasks: plugins.yml

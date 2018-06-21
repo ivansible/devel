@@ -13,8 +13,27 @@
                            | regex_search('https://[^\"]+64\\.deb') }}"
   when: latest_vagrant_release is not skipped
 
+- name: detect installed vagrant release
+  command: dpkg -s vagrant
+  changed_when: false
+  failed_when: false
+  register: dpkg_result
+
+- set_fact:
+    old_vagrant_ver: "{{ dpkg_result.stdout_lines
+                       | select('match', '^Version')
+                       | join('')
+                       | regex_search('[0-9.]+$') }}"
+    new_vagrant_ver: "{{ vagrant_package_url
+                       | basename
+                       | regex_search('_[0-9.]+_')
+                       | regex_replace('_') }}"
+
 - debug:
-    msg: "latest vagrant release: {{ vagrant_package_url | basename }}"
+    msg:
+      - "latest vagrant .deb: {{ vagrant_package_url | basename }}"
+      - "old vagrant version: {{ old_vagrant_ver | default('n/a', true) }}"
+      - "new vagrant version: {{ new_vagrant_ver }}"
   run_once: true
   when: latest_vagrant_release is not skipped
 
@@ -22,12 +41,7 @@
   apt:
     deb: "{{ vagrant_package_url }}"
     only_upgrade: "{{ vagrant_allow_reinstall | bool == false }}"
-  when: vagrant_package_url != 'ppa'
   register: vagrant_deb_result
-
-- name: install vagrant from ppa
-  apt:
-    name: vagrant
-  when: vagrant_package_url == 'ppa'
-  register: vagrant_ppa_result
+  when: "old_vagrant_ver != new_vagrant_ver
+         or vagrant_allow_reinstall | bool == true"
 ...
