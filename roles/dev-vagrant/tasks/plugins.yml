@@ -15,10 +15,19 @@
   changed_when: false
   when: plugins_need_update
 
-- name: list installed plugins
-  command: vagrant plugin list
-  changed_when: false
-  register: plugin_list_result
+- block:
+    - name: list installed vagrant plugins
+      command: vagrant plugin list
+      changed_when: false
+      register: plugin_list_result
+  rescue:
+    - name: expunge/reinstall vagrant plugins
+      command: vagrant expunge --reinstall
+      changed_when: false
+    - name: list installed vagrant plugins after fix
+      command: vagrant plugin list
+      changed_when: false
+      register: plugin_list_result
 
 - name: extract installed plugins from output
   set_fact:
