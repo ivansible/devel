@@ -3,15 +3,19 @@
   uri:
     url: https://www.vagrantup.com/downloads.html
     connection: local
+    creates: "{{ (vagrant_allow_reinstall | bool or true)
+               | ternary(omit, '/usr/bin/vagrant') }}"
     return_content: yes
+
   register: latest_vagrant_release
   when: vagrant_package_url == 'latest'
 
-- name: check whether plugins need a repair
+- name: extract latest vagrant package url
   set_fact:
     vagrant_package_url: "{{ latest_vagrant_release.content
                            | regex_search('https://[^\"]+64\\.deb') }}"
   when: latest_vagrant_release is not skipped
+        and latest_vagrant_release.content is defined
 
 - name: detect installed vagrant release
   command: dpkg -s vagrant
@@ -36,12 +40,15 @@
       - "new vagrant version: {{ new_vagrant_ver }}"
   run_once: true
   when: latest_vagrant_release is not skipped
+        and latest_vagrant_release.content is defined
+        and old_vagrant_ver != new_vagrant_ver
 
 - name: install vagrant package from url
   apt:
     deb: "{{ vagrant_package_url }}"
     only_upgrade: "{{ vagrant_allow_reinstall | bool == false }}"
   register: vagrant_deb_result
-  when: "old_vagrant_ver != new_vagrant_ver
-         or vagrant_allow_reinstall | bool == true"
+  when: (old_vagrant_ver != new_vagrant_ver
+         and vagrant_package_url != 'latest')
+        or vagrant_allow_reinstall | bool == true
 ...
