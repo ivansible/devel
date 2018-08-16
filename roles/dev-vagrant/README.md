@@ -1,4 +1,4 @@
-# Role ivansible.dev-vagrant
+# Role ivansible.dev_vagrant
 
 Install vagrant and plugins.
 See instructions here: https://www.vagrantup.com/docs/installation/
@@ -45,7 +45,7 @@ None
 
     - hosts: vag2
       roles:
-        - role: ivansible.dev-vagrant
+        - role: ivansible.dev_vagrant
 
 
 ## License

@@ -1,5 +1,6 @@
 ---
-# tasks file for ivansible.dev-vagrant
+# tasks file for ivansible.dev_vagrant
+
 - setup:
 
 - name: vagrant from ppa (not recommended)

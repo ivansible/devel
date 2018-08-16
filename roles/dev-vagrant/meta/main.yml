@@ -2,7 +2,7 @@
 dependencies: []
 
 galaxy_info:
-
+  role_name: dev_vagrant
   author: "Ivan Andreev"
   description: "Install vagrant and plugins"
   company: "IvanSible"
