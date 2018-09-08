@@ -22,13 +22,12 @@
   tags: dev_vagplugins
 
 - name: authenticate with vagrant cloud
-  command:
-    argv:
-      - vagrant
-      - login
-      - -t
-      - "{{ vagrant_cloud_token }}"
+  # use transient environment variable to hide token from command line
+  shell: vagrant login -t $_vagrant_cloud_token
+  args:
     creates: ~/.vagrant.d/data/vagrant_login_token
+  environment:
+    _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
   become: no
   when: vagrant_cloud_token != ''
   tags: dev_vaglogin
