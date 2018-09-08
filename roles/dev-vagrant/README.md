@@ -22,18 +22,24 @@ This can be one of:
 
     vagrant_plugin_list: []
 
-If the target host belongs to the `workspace` group, a number of vagrant
-plugins will be installed locally for target user.
+If this list is not empty, a number of vagrant plugins will be installed
+locally for target user (or reinstalled if vagrnant was upgraded).
 
     vagrant_allow_reinstall: no
 
 Allows to refresh already downloaded redistributables.
 
+    vagrant_cloud_token: ""
+
+If this setting is defined and non-empty, target user will be
+authenticated with vagrant cloud.
+
 
 ## Tags
 
-- `dev_vagrant`
-- `dev_vagplugins`
+- `dev_vagrant` -- install vagrant package
+- `dev_vagplugins` -- install vagrant plugins
+- `dev_vaglogin` -- authenticate with vagrant cloud
 
 
 ## Dependencies

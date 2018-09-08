@@ -18,7 +18,7 @@
 
 - import_tasks: plugins.yml
   become: no
-  when: "'workspace' in group_names"
+  when: vagrant_plugin_list | length > 0
   tags: dev_vagplugins
 
 - name: authenticate with vagrant cloud
@@ -30,7 +30,6 @@
       - "{{ vagrant_cloud_token }}"
     creates: ~/.vagrant.d/data/vagrant_login_token
   become: no
-  when: "vagrant_cloud_token != ''
-         and 'workspace' in group_names"
+  when: vagrant_cloud_token != ''
   tags: dev_vaglogin
 ...

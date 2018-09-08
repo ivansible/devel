@@ -7,4 +7,6 @@ vagrant_allow_reinstall: no
 vagrant_package_url: latest
 
 vagrant_plugin_list: []
+
+vagrant_cloud_token: ""
 ...
