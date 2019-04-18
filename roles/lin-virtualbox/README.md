@@ -1,8 +1,6 @@
 # ivansible.lin_virtualbox
 
-This role performs:
- - action1;
- - action2;
+This role installs [VirtualBox](https://www.virtualbox.org/) on Linux.
 
 
 ## Requirements
@@ -14,14 +12,12 @@ None
 
 Available variables are listed below, along with default values.
 
-    variable1: 1
-    variable2: 2
+    virtualbox_version: 6.0
 
 
 ## Tags
 
-- `role1_tag1` -- action1
-- `role1_tag2` -- action2
+- `lin_virtualbox`
 
 
 ## Dependencies
@@ -31,11 +27,9 @@ None
 
 ## Example Playbook
 
-    - hosts: vagrant-boxes
+    - hosts: mybox
       roles:
-         - role: lin_virtualbox
-           variable1: 1
-           variable2: 2
+         - role: ivansible.lin_virtualbox
 
 
 ## License
