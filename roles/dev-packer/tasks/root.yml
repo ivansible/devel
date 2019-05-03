@@ -1,0 +1,5 @@
+---
+- name: ivansible.lin_packer root action 1
+  debug:
+    msg: action 1
+...
