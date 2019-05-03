@@ -23,7 +23,8 @@
   failed_when: false
   register: dpkg_result
 
-- set_fact:
+- name: extract old and new vagrant version
+  set_fact:
     old_vagrant_ver: "{{ dpkg_result.stdout_lines
                        | select('match', '^Version')
                        | join('')
@@ -46,9 +47,9 @@
 - name: install vagrant package from url
   apt:
     deb: "{{ vagrant_package_url }}"
-    only_upgrade: "{{ vagrant_allow_reinstall | bool == false }}"
+    only_upgrade: "{{ not vagrant_allow_reinstall |bool }}"
   register: vagrant_deb_result
   when: (old_vagrant_ver != new_vagrant_ver
          and vagrant_package_url != 'latest')
-        or vagrant_allow_reinstall | bool == true
+         or vagrant_allow_reinstall |bool
 ...

@@ -34,10 +34,17 @@ Allows to refresh already downloaded redistributables.
 If this setting is defined and non-empty, target user will be
 authenticated with vagrant cloud.
 
+    vagrant_files_repo: ""
+    vagrant_files_dir: ~/devel/vagrant
+If current host belongs to the `permitted` group and the URL of Git repository
+with user _vagrant files_ is defined and not empty, the repository will be
+checked out in the given local directory.
+
 
 ## Tags
 
-- `dev_vagrant` -- install vagrant package
+- `dev_vagrant` -- the whole role
+- `dev_vaginstall` -- install vagrant package
 - `dev_vagplugins` -- install vagrant plugins
 - `dev_vaglogin` -- authenticate with vagrant cloud
 
