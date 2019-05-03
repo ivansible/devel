@@ -1,10 +1,29 @@
 ---
-# perform setup as a non-root user
-- setup:
-  become: no
+- name: perform setup as a non-root user
+  setup:
 
-# use import to become root globally
-- name: become root
-  import_tasks: root.yml
-  become: yes
+- name: dev_terraform role
+  block:
+    - name: install terraform binary
+      import_tasks: root.yml
+      become: yes
+      tags: dev_terraform_install
+
+    - name: create directory for terraform plugins
+      file:
+        state: directory
+        path: "{{ terraform_plugin_dir }}"
+
+    - name: install 3rd-party terraform plugins
+      import_tasks: plugins.yml
+      tags: dev_terraform_plugins
+
+    - name: configure permitted users for terraform
+      import_tasks: user.yml
+      when: "'permitted' in group_names"
+      tags: dev_terraform_user
+  tags:
+  - dev_terraform
+  - ip4only
+  # end of block
 ...

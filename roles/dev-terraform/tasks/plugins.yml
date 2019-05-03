@@ -1,0 +1,17 @@
+---
+# install 3rd-party terraform plugins
+
+- name: install plugin terraform-provider-vultr
+  get_url:
+    url: "https://github.com/{{ terraform_provider_vultr_repo_owner }}/terraform-provider-vultr/releases/download/{{ terraform_provider_vultr_version }}/terraform-provider-vultr_{{ terraform_provider_vultr_version }}_linux_amd64"
+    dest: "{{ terraform_plugin_dir }}/terraform-provider-vultr_{{ terraform_provider_vultr_version }}"
+    mode: 0755
+    force: no
+
+- name: install plugin terraform-provisioner-ansible
+  get_url:
+    url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible/releases/download/{{ terraform_provisioner_ansible_version }}/terraform-provisioner-ansible-linux-amd64_{{ terraform_provisioner_ansible_version }}"
+    dest: "{{ terraform_plugin_dir }}/terraform-provisioner-ansible_{{ terraform_provisioner_ansible_version }}"
+    mode: 0755
+    force: no
+...

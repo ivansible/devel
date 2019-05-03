@@ -1,5 +1,30 @@
 ---
-- name: ivansible.lin_terraform root action 1
-  debug:
-    msg: action 1
+- name: detect latest terraform release
+  uri:
+    url: https://github.com/hashicorp/terraform/releases/latest
+    method: HEAD
+    creates: "{{ terraform_allow_reinstall | ternary(omit, terraform_linux_binary) }}"
+  #connection: local  # never use this with "creates"
+  register: latest_terraform_release
+  when: terraform_version == 'latest'
+
+- name: extract terraform release from github page
+  set_fact:
+    terraform_version:
+      "{{ latest_terraform_release.url | basename | regex_replace('^v') }}"
+  when: latest_terraform_release is not skipped
+        and latest_terraform_release.url is defined
+
+- debug:
+    msg: "latest terraform release: {{ terraform_version }}"
+  run_once: true
+  when: latest_terraform_release is not skipped
+        and latest_terraform_release.url is defined
+
+- name: download archived terraform binary
+  unarchive:
+    remote_src: yes
+    src: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
+    dest: "{{ terraform_linux_binary | dirname }}"
+    creates: "{{ terraform_allow_reinstall | ternary(omit, terraform_linux_binary) }}"
 ...

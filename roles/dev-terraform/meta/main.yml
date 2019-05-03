@@ -1,8 +1,9 @@
 ---
 dependencies: []
+# - role: ivansible.dev_user
 
 galaxy_info:
-  role_name: lin_terraform
+  role_name: dev_terraform
   author: "Ivan Andreev"
   description: "install terraform and 3rd party plugins on linux"
   company: "IvanSible"

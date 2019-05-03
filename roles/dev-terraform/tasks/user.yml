@@ -1,0 +1,32 @@
+---
+# configure permitted users for terraform
+
+- name: configure terraform aliases
+  lineinfile:
+    path: ~/.local/bashrc/4alias.sh
+    line: "alias {{ item }}"
+  loop:
+    - "tf='terraform'"
+    - "tfup='terraform apply -auto-approve'"
+    - "tfdown='terraform destroy -auto-approve'"
+    - "tfls='terraform state list'"
+  tags: dev_terraform_aliases
+
+- name: bash completion for terraform
+  lineinfile:
+    path: ~/.local/bashrc/5completion.sh
+    line: "complete -C /usr/local/bin/terraform terraform"
+  tags: dev_terraform_completion
+
+- name: checkout terraform plans, if permitted
+  git:
+    dest: "{{ terraform_plans_dir }}"
+    repo: "{{ terraform_plans_repo }}"
+    version: "{{ terraform_plans_branch }}"
+    # only clone, don't choke on pending modifications
+    update: no
+    accept_hostkey: yes
+  when: "terraform_plans_repo != ''
+         and 'permitted' in group_names"
+  tags: dev_terraform_plans
+...
