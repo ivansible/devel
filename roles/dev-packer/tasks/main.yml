@@ -1,10 +1,27 @@
 ---
-# perform setup as a non-root user
-- setup:
+- name: refresh facts as non-root
+  setup:
   become: no
 
-# use import to become root globally
-- name: become root
-  import_tasks: root.yml
-  become: yes
+- block:
+    - name: install packer binary
+      import_tasks: root.yml
+      become: yes
+      tags: dev_packer_install
+
+    - name: checkout packer_templates, if permitted
+      git:
+        dest: "{{ packer_templates_dir }}"
+        repo: "{{ packer_templates_repo }}"
+        version: "{{ packer_templates_branch }}"
+        # only clone, don't choke on pending modifications
+        update: no
+        accept_hostkey: yes
+      become: no
+      when: packer_templates_repo
+            and 'permitted' in group_names
+      tags: dev_packer_templates
+  tags:
+  - dev_packer
+  - ip4only
 ...

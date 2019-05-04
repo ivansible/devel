@@ -1,4 +1,11 @@
 ---
-# defaults file for ivansible.lin_packer
+# defaults for ivansible.dev_packer
 
+packer_version: latest
+packer_allow_reinstall: no
+packer_linux_binary: /usr/local/bin/packer
+
+packer_templates_repo: ""
+packer_templates_branch: master
+packer_templates_dir: ~/devel/packer
 ...

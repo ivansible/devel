@@ -2,9 +2,9 @@
 dependencies: []
 
 galaxy_info:
-  role_name: lin_packer
+  role_name: dev_packer
   author: "Ivan Andreev"
-  description: "install HashiCorp packer on linux"
+  description: "install HashiCorp Packer on linux"
   company: "IvanSible"
   license: MIT
   min_ansible_version: 2.5
