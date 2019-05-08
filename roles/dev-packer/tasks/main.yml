@@ -5,22 +5,22 @@
 
 - block:
     - name: install packer binary
-      import_tasks: root.yml
+      import_tasks: install.yml
       become: yes
       tags: dev_packer_install
 
-    - name: checkout packer_templates, if permitted
-      git:
-        dest: "{{ packer_templates_dir }}"
-        repo: "{{ packer_templates_repo }}"
-        version: "{{ packer_templates_branch }}"
-        # only clone, don't choke on pending modifications
-        update: no
-        accept_hostkey: yes
-      become: no
-      when: packer_templates_repo
-            and 'permitted' in group_names
-      tags: dev_packer_templates
+    - name: create directory for packer plugins
+      file:
+        state: directory
+        path: "{{ packer_plugin_dir }}"
+
+    - name: install 3rd-party packer plugins
+      import_tasks: plugins.yml
+      tags: dev_packer_plugins
+
+    - name: configure permitted users for packer
+      import_tasks: user.yml
+      when: "'permitted' in group_names"
   tags:
   - dev_packer
   - ip4only

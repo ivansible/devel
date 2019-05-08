@@ -1,6 +1,7 @@
 # ivansible.dev_packer
 
-Install HashiCorp Packer on Linux
+Install HashiCorp Packer and 3rd-party plugins on Linux:
+- vultr builder plugin
 If the host belongs to `permitted` group, this role will also checkout
 user's Packer templates.
 
@@ -30,6 +31,7 @@ Allows to override already installed binary.
 - `ip4only` -- Mark this role as inappropriate for IPv6-only hosts (due to github)
 - `dev_packer` -- The whole role
 - `dev_packer_install` -- Install Packer binary
+- `dev_packer_plugins` -- Install 3rd-party Packer plugins
 - `dev_packer_templates` -- Checkout user's packer templates
 
 

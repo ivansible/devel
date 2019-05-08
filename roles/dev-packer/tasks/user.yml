@@ -1,0 +1,16 @@
+---
+# configure permitted users for packer
+
+- name: checkout packer templates, if permitted
+  git:
+    dest: "{{ packer_templates_dir }}"
+    repo: "{{ packer_templates_repo }}"
+    version: "{{ packer_templates_branch }}"
+    # only clone, don't choke on pending modifications
+    update: no
+    accept_hostkey: yes
+  become: no
+  when: packer_templates_repo
+        and 'permitted' in group_names
+  tags: dev_packer_templates
+...
