@@ -7,17 +7,19 @@
   uri:
     url: https://raw.githubusercontent.com/hashicorp/packer/master/CHANGELOG.md
     return_content: yes
-    creates: "{{ packer_allow_reinstall | ternary(omit, packer_linux_binary) }}"
+    creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
   register: latest_packer_release
   when: packer_version == 'latest'
 
 - block:
   - name: extract packer release from changelog
+    # look specifically for releases "1.2.3 (Month 31, YYYY)"
+    # and skip betas without release date like "0.1 (upcoming)"
     set_fact:
       packer_version:
         "{{ latest_packer_release.content
-          | regex_search('^## +[0-9.]+')
-          | regex_replace('[# (]') }}"
+          | regex_search('## +[0-9.]+ [(].+?, [0-9]+[)]')
+          | regex_search('[0-9.]+') }}"
 
   - debug:
       msg: "latest packer release: {{ packer_version }}"
@@ -36,5 +38,5 @@
     remote_src: yes
     src: https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip
     dest: "{{ packer_linux_binary | dirname }}"
-    creates: "{{ packer_allow_reinstall | ternary(omit, packer_linux_binary) }}"
+    creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
 ...

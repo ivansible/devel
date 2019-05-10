@@ -22,8 +22,9 @@ checked out in the given local directory.
     packer_version: latest
 Version of the packer binary to install.
 
-    packer_allow_reinstall: no
-Allows to override already installed binary.
+    packer_allow_reinstall_packer: no
+    packer_allow_reinstall_plugins: yes
+Allows to override already installed binaries.
 
 
 ## Tags

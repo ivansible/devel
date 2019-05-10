@@ -2,11 +2,12 @@
 # defaults for ivansible.dev_packer
 
 packer_version: latest
-packer_allow_reinstall: no
 packer_linux_binary: /usr/local/bin/packer
+packer_allow_reinstall_packer: no
 
+packer_builder_vultr_version: "v0.1"
 packer_plugin_dir: ~/.packer.d/plugins
-packer_builder_vultr_version: "0.1"
+packer_allow_reinstall_plugins: yes
 
 packer_templates_repo: ""
 packer_templates_branch: master
