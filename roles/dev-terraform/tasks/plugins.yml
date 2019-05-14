@@ -2,16 +2,31 @@
 # install 3rd-party terraform plugins
 
 - name: install plugin terraform-provider-vultr
-  get_url:
-    url: "https://github.com/{{ terraform_provider_vultr_repo_owner }}/terraform-provider-vultr/releases/download/{{ terraform_provider_vultr_version }}/terraform-provider-vultr_{{ terraform_provider_vultr_version }}_linux_amd64"
-    dest: "{{ terraform_plugin_dir }}/terraform-provider-vultr_{{ terraform_provider_vultr_version }}"
-    mode: 0755
-    force: no
+  unarchive:
+    remote_src: yes
+    src: "https://github.com/{{ terraform_provider_vultr_repo_owner }}/terraform-provider-vultr/releases/download/v{{ terraform_provider_vultr_version }}/terraform-provider-vultr_v{{ terraform_provider_vultr_version }}_linux_amd64.tar.gz"
+    dest: "{{ terraform_plugin_dir }}"
+    exclude:
+      - LICENSE
+      - README.md
+    creates: "{{ terraform_allow_reinstall_plugins | ternary(omit, terraform_plugin_dir + '/terraform-provider-vultr_v' + terraform_provider_vultr_version) }}"
 
-- name: install plugin terraform-provisioner-ansible
+- name: install plugin terraform-provisioner-ansible from tarball
+  unarchive:
+    remote_src: yes
+    src: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible/releases/download/v{{ terraform_provisioner_ansible_version }}/terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}_linux_amd64.zip"
+    dest: "{{ terraform_plugin_dir }}"
+    exclude:
+      - LICENSE
+      - README.md
+    creates: "{{ terraform_allow_reinstall_plugins | ternary(omit, terraform_plugin_dir + '/terraform-provisioner-ansible_v' + terraform_provisioner_ansible_version) }}"
+  when: terraform_provisioner_ansible_is_tarball |bool
+
+- name: install plugin terraform-provisioner-ansible as binary
   get_url:
-    url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible/releases/download/{{ terraform_provisioner_ansible_version }}/terraform-provisioner-ansible-linux-amd64_{{ terraform_provisioner_ansible_version }}"
-    dest: "{{ terraform_plugin_dir }}/terraform-provisioner-ansible_{{ terraform_provisioner_ansible_version }}"
+    url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible/releases/download/v{{ terraform_provisioner_ansible_version }}/terraform-provisioner-ansible-linux-amd64_v{{ terraform_provisioner_ansible_version }}"
+    dest: "{{ terraform_plugin_dir }}/terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}"
     mode: 0755
-    force: no
+    force: "{{ terraform_allow_reinstall_plugins }}"
+  when: not terraform_provisioner_ansible_is_tarball |bool
 ...

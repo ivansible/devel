@@ -3,7 +3,7 @@
   uri:
     url: https://github.com/hashicorp/terraform/releases/latest
     method: HEAD
-    creates: "{{ terraform_allow_reinstall | ternary(omit, terraform_linux_binary) }}"
+    creates: "{{ terraform_allow_reinstall_terraform | ternary(omit, terraform_linux_binary) }}"
   #connection: local  # never use this with "creates"
   register: latest_terraform_release
   when: terraform_version == 'latest'
@@ -26,5 +26,5 @@
     remote_src: yes
     src: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
     dest: "{{ terraform_linux_binary | dirname }}"
-    creates: "{{ terraform_allow_reinstall | ternary(omit, terraform_linux_binary) }}"
+    creates: "{{ terraform_allow_reinstall_terraform | ternary(omit, terraform_linux_binary) }}"
 ...

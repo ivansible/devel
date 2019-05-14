@@ -5,7 +5,7 @@
 - name: dev_terraform role
   block:
     - name: install terraform binary
-      import_tasks: root.yml
+      import_tasks: install.yml
       become: yes
       tags: dev_terraform_install
 

@@ -2,14 +2,16 @@
 # defaults file for ivansible.dev_terraform
 
 terraform_version: latest
-terraform_allow_reinstall: no
+terraform_allow_reinstall_terraform: no
 terraform_linux_binary: /usr/local/bin/terraform
 
 terraform_plugin_dir: ~/.terraform.d/plugins
+terraform_allow_reinstall_plugins: no
 terraform_provisioner_ansible_repo_owner: radekg
-terraform_provisioner_ansible_version: v2.2.0
+terraform_provisioner_ansible_version: 2.2.1
+terraform_provisioner_ansible_is_tarball: false
 terraform_provider_vultr_repo_owner: squat
-terraform_provider_vultr_version: v0.1.9
+terraform_provider_vultr_version: 0.1.9
 
 terraform_plans_repo: ""
 terraform_plans_branch: master
