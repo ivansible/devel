@@ -28,19 +28,6 @@
   - dev_vagplugins
   - dev_vagrant
 
-- name: authenticate with vagrant cloud
-  # use transient environment variable to hide token from command line
-  shell: vagrant login -t $_vagrant_cloud_token
-  args:
-    creates: ~/.vagrant.d/data/vagrant_login_token
-  environment:
-    _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
-  become: no
-  when: vagrant_cloud_token != ''
-  tags:
-  - dev_vaglogin
-  - dev_vagrant
-
 - name: checkout vagrant files, if permitted
   git:
     dest: "{{ vagrant_files_dir }}"
@@ -53,5 +40,19 @@
          and 'permitted' in group_names"
   tags:
   - dev_vagrantfiles
+  - dev_vagrant
+
+- name: authenticate with vagrant cloud (optional, so ok to fail)
+  # use transient environment variable to hide token from command line
+  shell: vagrant login -t $_vagrant_cloud_token
+  args:
+    creates: ~/.vagrant.d/data/vagrant_login_token
+  environment:
+    _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
+  become: no
+  ignore_errors: yes
+  when: vagrant_cloud_token != ''
+  tags:
+  - dev_vaglogin
   - dev_vagrant
 ...
