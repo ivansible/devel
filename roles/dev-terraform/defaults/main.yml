@@ -16,4 +16,6 @@ terraform_provider_vultr_version: 0.1.9
 terraform_plans_repo: ""
 terraform_plans_branch: master
 terraform_plans_dir: ~/devel/terraform
+
+terraform_api_token: ""
 ...
