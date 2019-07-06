@@ -20,7 +20,7 @@
 
     - name: configure permitted users for terraform
       import_tasks: user.yml
-      when: "'permitted' in group_names"
+      when: is_permitted |bool
       tags: dev_terraform_user
   tags:
   - dev_terraform

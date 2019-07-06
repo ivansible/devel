@@ -42,7 +42,6 @@
       plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
       disable_checkpoint = true
     marker: "# == {mark} terraform enterprise (free) =="
-  when: "terraform_api_token != ''
-         and 'permitted' in group_names"
+  when: terraform_api_token != '' and is_permitted |bool
   tags: dev_terraform_api_token
 ...

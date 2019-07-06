@@ -1,5 +1,6 @@
 ---
 # defaults file for ivansible.dev_terraform
+is_permitted: no
 
 terraform_version: latest
 terraform_allow_reinstall_terraform: no
