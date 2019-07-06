@@ -1,5 +1,6 @@
 ---
 # defaults for ivansible.dev_packer
+is_permitted: no
 
 packer_version: latest
 packer_linux_binary: /usr/local/bin/packer

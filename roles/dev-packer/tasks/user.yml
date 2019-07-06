@@ -10,7 +10,6 @@
     update: no
     accept_hostkey: yes
   become: no
-  when: packer_templates_repo
-        and 'permitted' in group_names
+  when: packer_templates_repo and is_permitted |bool
   tags: dev_packer_templates
 ...
