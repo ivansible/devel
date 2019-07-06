@@ -1,5 +1,6 @@
 ---
 # defaults file for ivansible.dev_vagrant
+is_permitted: no
 
 vagrant_allow_reinstall: no
 

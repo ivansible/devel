@@ -36,8 +36,7 @@
     # only clone, don't choke on pending modifications
     update: no
     accept_hostkey: yes
-  when: "vagrant_files_repo != ''
-         and 'permitted' in group_names"
+  when: vagrant_files_repo != '' and is_permitted |bool
   tags:
   - dev_vagrantfiles
   - dev_vagrant
@@ -51,7 +50,7 @@
     _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
   become: no
   ignore_errors: yes
-  when: vagrant_cloud_token != ''
+  when: vagrant_cloud_token != '' and is_permitted |bool
   tags:
   - dev_vaglogin
   - dev_vagrant
