@@ -43,7 +43,7 @@
 
 - name: authenticate with vagrant cloud (optional, so ok to fail)
   # use transient environment variable to hide token from command line
-  shell: vagrant login -t $_vagrant_cloud_token
+  shell: vagrant cloud auth login -t $_vagrant_cloud_token
   args:
     creates: ~/.vagrant.d/data/vagrant_login_token
   environment:
