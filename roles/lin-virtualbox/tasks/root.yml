@@ -1,4 +1,11 @@
 ---
+- name: install prerequisites for virtualbox kernel modules
+  apt:
+    name:
+      - linux-headers-generic
+      - linux-headers-{{ ansible_kernel }}
+      - build-essential
+
 - name: add virtualbox signing key
   apt_key:
     url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
