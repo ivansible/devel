@@ -47,7 +47,7 @@
     _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
   become: no
   ignore_errors: yes
-  when: vagrant_cloud_token != '' and is_permitted |bool # noqa 602
+  when: vagrant_cloud_token != '' and is_permitted |bool and vagrant_use_login |bool # noqa 602
   tags:
     - dev_vaglogin
     - dev_vagrant

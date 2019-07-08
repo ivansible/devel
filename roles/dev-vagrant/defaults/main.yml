@@ -10,6 +10,7 @@ vagrant_package_url: latest
 vagrant_plugin_list: []
 
 vagrant_cloud_token: ""
+vagrant_use_login: false
 
 vagrant_files_repo: ""
 vagrant_files_branch: master
