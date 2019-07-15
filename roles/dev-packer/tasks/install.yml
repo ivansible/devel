@@ -10,6 +10,8 @@
     creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
   register: latest_packer_release
   when: packer_version == 'latest'
+  # fix intermittend network failures
+  until: latest_packer_release is successful
 
 - block:
   - name: extract packer release from changelog
