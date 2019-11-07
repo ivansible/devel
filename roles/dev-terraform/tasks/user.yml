@@ -26,8 +26,7 @@
     # only clone, don't choke on pending modifications
     update: no
     accept_hostkey: yes
-  when: "terraform_plans_repo != ''
-         and 'permitted' in group_names"
+  when: terraform_plans_repo != '' and 'permitted' in group_names # noqa 602
   tags: dev_terraform_plans
 
 - name: setup terraform enterprise (free) token, if permitted
@@ -42,6 +41,6 @@
       plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
       disable_checkpoint = true
     marker: "# == {mark} terraform enterprise (free) =="
-  when: terraform_api_token != '' and is_permitted |bool
+  when: terraform_api_token != '' and is_permitted |bool # noqa 602
   tags: dev_terraform_api_token
 ...

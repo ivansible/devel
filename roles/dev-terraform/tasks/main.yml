@@ -23,7 +23,6 @@
       when: is_permitted |bool
       tags: dev_terraform_user
   tags:
-  - dev_terraform
-  - ip4only
-  # end of block
+    - dev_terraform
+    - ip4only
 ...

@@ -27,4 +27,7 @@
     src: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
     dest: "{{ terraform_linux_binary | dirname }}"
     creates: "{{ terraform_allow_reinstall_terraform | ternary(omit, terraform_linux_binary) }}"
+  # fix intermittent network failures on .ru boxes
+  register: download_result
+  until: "'timed out' not in download_result.msg |default('')"
 ...
