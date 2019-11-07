@@ -11,22 +11,22 @@
   when: vagrant_package_url == 'ppa'
   register: vagrant_ppa_result
   tags:
-  - dev_vaginstall
-  - dev_vagrant
+    - dev_vaginstall
+    - dev_vagrant
 
 - import_tasks: vagrant.yml
   become: yes
   when: vagrant_package_url != 'ppa'
   tags:
-  - dev_vaginstall
-  - dev_vagrant
+    - dev_vaginstall
+    - dev_vagrant
 
 - import_tasks: plugins.yml
   become: no
   when: vagrant_plugin_list |length > 0
   tags:
-  - dev_vagplugins
-  - dev_vagrant
+    - dev_vagplugins
+    - dev_vagrant
 
 - name: checkout vagrant files, if permitted
   git:
@@ -36,10 +36,10 @@
     # only clone, don't choke on pending modifications
     update: no
     accept_hostkey: yes
-  when: vagrant_files_repo != '' and is_permitted |bool
+  when: vagrant_files_repo != '' and is_permitted |bool # noqa 602
   tags:
-  - dev_vagrantfiles
-  - dev_vagrant
+    - dev_vagrantfiles
+    - dev_vagrant
 
 - name: authenticate with vagrant cloud (optional, so ok to fail)
   # use transient environment variable to hide token from command line
@@ -50,8 +50,8 @@
     _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
   become: no
   ignore_errors: yes
-  when: vagrant_cloud_token != '' and is_permitted |bool
+  when: vagrant_cloud_token != '' and is_permitted |bool # noqa 602
   tags:
-  - dev_vaglogin
-  - dev_vagrant
+    - dev_vaglogin
+    - dev_vagrant
 ...
