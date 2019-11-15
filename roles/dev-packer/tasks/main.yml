@@ -22,6 +22,6 @@
       import_tasks: user.yml
       when: is_permitted |bool
   tags:
-  - dev_packer
-  - ip4only
+    - dev_packer
+    - ip4only
 ...

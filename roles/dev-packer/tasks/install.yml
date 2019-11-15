@@ -14,24 +14,24 @@
   until: latest_packer_release is successful
 
 - block:
-  - name: extract packer release from changelog
-    # look specifically for releases "1.2.3 (Month 31, YYYY)"
-    # and skip betas without release date like "0.1 (upcoming)"
-    set_fact:
-      packer_version:
-        "{{ latest_packer_release.content
-          | regex_search('## +[0-9.]+ [(].+?, [0-9]+[)]')
-          | regex_search('[0-9.]+') }}"
+    - name: extract packer release from changelog
+      # look specifically for releases "1.2.3 (Month 31, YYYY)"
+      # and skip betas without release date like "0.1 (upcoming)"
+      set_fact:
+        packer_version:
+          "{{ latest_packer_release.content
+            | regex_search('## +[0-9.]+ [(].+?, [0-9]+[)]')
+            | regex_search('[0-9.]+') }}"
 
-  - debug:
-      msg: "latest packer release: {{ packer_version }}"
-    run_once: true
+    - debug:
+        msg: "latest packer release: {{ packer_version }}"
+      run_once: true
 
-  - name: validate extracted release string
-    assert:
-      that: packer_version is match('^[0-9.]+$')
-      msg: "a valid packer version must contain only dots and digits"
-      quiet: yes
+    - name: validate extracted release string
+      assert:
+        that: packer_version is match('^[0-9.]+$')
+        msg: "a valid packer version must contain only dots and digits"
+        quiet: yes
   when: latest_packer_release is not skipped
         and latest_packer_release.content is defined
 
