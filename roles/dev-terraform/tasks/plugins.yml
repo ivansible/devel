@@ -10,6 +10,13 @@
       - LICENSE
       - README.md
     creates: "{{ terraform_allow_reinstall_plugins |ternary(omit, terraform_plugin_dir + '/' + file_name) }}"
+    # perform operations as root - workaround for unarchive issue in docker
+    # see https://github.com/ansible/ansible/issues/49284
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid |string }}"
+    mode: 0755
+  become: true
+  # temporary variables to reduce length of lines
   vars:
     repo_url: "https://github.com/{{ terraform_provider_vultr_repo_owner }}/terraform-provider-vultr"
     file_name: "terraform-provider-vultr_v{{ terraform_provider_vultr_version }}"
@@ -26,11 +33,20 @@
       - LICENSE
       - README.md
     creates: "{{ terraform_allow_reinstall_plugins |ternary(omit, terraform_plugin_dir + '/' + file_name) }}"
+    # perform operations as root - workaround for unarchive issue in docker
+    # see https://github.com/ansible/ansible/issues/49284
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid |string }}"
+    mode: 0755
+  become: true
+  # temporary variables to reduce length of lines
   vars:
     repo_url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible"
     file_name: "terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}"
+  # fix intermittent network failures on .ru boxes
   register: download_result
   until: "'timed out' not in download_result.msg |default('')"
+  # choose between tarball and binary
   when: terraform_provisioner_ansible_is_tarball |bool
 
 - name: install plugin terraform-provisioner-ansible (as binary)

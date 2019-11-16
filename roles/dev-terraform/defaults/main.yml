@@ -6,7 +6,7 @@ terraform_version: latest
 terraform_allow_reinstall_terraform: no
 terraform_linux_binary: /usr/local/bin/terraform
 
-terraform_plugin_dir: ~/.terraform.d/plugins
+terraform_plugin_dir: "{{ ansible_user_dir }}/.terraform.d/plugins"
 terraform_allow_reinstall_plugins: no
 terraform_provisioner_ansible_repo_owner: radekg
 terraform_provisioner_ansible_version: 2.2.1
@@ -16,7 +16,7 @@ terraform_provider_vultr_version: 0.1.9
 
 terraform_plans_repo: ""
 terraform_plans_branch: master
-terraform_plans_dir: ~/devel/terraform
+terraform_plans_dir: "{{ ansible_user_dir }}/devel/terraform"
 
 terraform_api_token: ""
 ...
