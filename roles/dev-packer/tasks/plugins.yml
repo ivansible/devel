@@ -12,6 +12,13 @@
       - LICENSE
       - README.md
     creates: "{{ packer_allow_reinstall_plugins | ternary(omit, packer_plugin_dir + '/packer-builder-vultr') }}"
+    # perform operations as root - workaround for unarchive issue in docker
+    # see https://github.com/ansible/ansible/issues/49284
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid |string }}"
+    mode: 0755
+  become: true
+  # temporary variables to reduce length of lines
   vars:
     url_releases: https://github.com/ivandeex/packer-builder-vultr/releases/download
   # fix intermittent network failures

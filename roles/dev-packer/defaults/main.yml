@@ -7,10 +7,10 @@ packer_linux_binary: /usr/local/bin/packer
 packer_allow_reinstall_packer: no
 
 packer_builder_vultr_version: "0.2.1"
-packer_plugin_dir: ~/.packer.d/plugins
+packer_plugin_dir: "{{ ansible_user_dir }}/.packer.d/plugins"
 packer_allow_reinstall_plugins: yes
 
 packer_templates_repo: ""
 packer_templates_branch: master
-packer_templates_dir: ~/devel/packer
+packer_templates_dir: "{{ ansible_user_dir }}/devel/packer"
 ...
