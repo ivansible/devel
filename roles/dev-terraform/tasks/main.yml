@@ -1,7 +1,4 @@
 ---
-- name: perform setup as a non-root user
-  setup:
-
 - name: dev_terraform role
   block:
     - name: install terraform binary
