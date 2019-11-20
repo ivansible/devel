@@ -1,8 +1,4 @@
 ---
-- name: refresh facts as non-root
-  setup:
-  become: no
-
 - block:
     - name: install packer binary
       import_tasks: install.yml
