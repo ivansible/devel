@@ -1,13 +1,10 @@
 ---
-# tasks file for ivansible.dev_vagrant
-
-- name: refresh host info
-  setup:
+# tasks for ivansible.dev_vagrant
 
 - name: vagrant from ppa (not recommended)
   apt:
     name: vagrant
-  become: yes
+  become: true
   when: vagrant_package_url == 'ppa'
   register: vagrant_ppa_result
   tags:
