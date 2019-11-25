@@ -2,11 +2,11 @@
 - name: detect latest vagrant release
   uri:
     url: https://www.vagrantup.com/downloads.html
-    connection: local
     creates: "{{ (vagrant_allow_reinstall | bool or true)
                | ternary(omit, '/usr/bin/vagrant') }}"
     return_content: true
   register: latest_vagrant_release
+  until: latest_vagrant_release is successful
   when: vagrant_package_url == 'latest'
 
 - name: extract latest vagrant package url
