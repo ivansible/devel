@@ -3,7 +3,7 @@
 
 - name: install plugin terraform-provider-vultr
   unarchive:
-    remote_src: yes
+    remote_src: true
     src: "{{ repo_url }}/releases/download/v{{ terraform_provider_vultr_version }}/{{ file_name }}_linux_amd64.tar.gz"
     dest: "{{ terraform_plugin_dir }}"
     exclude:
@@ -19,7 +19,7 @@
 
 - name: install plugin terraform-provisioner-ansible (from tarball)
   unarchive:
-    remote_src: yes
+    remote_src: true
     src: "{{ repo_url }}/releases/download/v{{ terraform_provisioner_ansible_version }}/{{ file_name }}_linux_amd64.zip"
     dest: "{{ terraform_plugin_dir }}"
     exclude:

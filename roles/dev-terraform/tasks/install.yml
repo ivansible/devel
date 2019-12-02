@@ -1,33 +1,21 @@
 ---
 - name: detect latest terraform release
-  uri:
-    url: https://github.com/hashicorp/terraform/releases/latest
-    method: HEAD
-    creates: "{{ terraform_allow_reinstall_terraform | ternary(omit, terraform_linux_binary) }}"
-  #connection: local  # never use this with "creates"
+  github_release:
+    repository: hashicorp/terraform
+    release: "{{ terraform_version }}"
+    strip_v: true
+    template: https://releases.hashicorp.com/terraform/{ver}/terraform_{ver}_linux_amd64.zip
+    creates: "{{ terraform_linux_binary }}"
+    reinstall: "{{ terraform_allow_reinstall_terraform |bool }}"
   register: latest_terraform_release
-  when: terraform_version == 'latest'
-
-- name: extract terraform release from github page
-  set_fact:
-    terraform_version:
-      "{{ latest_terraform_release.url | basename | regex_replace('^v') }}"
-  when: latest_terraform_release is not skipped
-        and latest_terraform_release.url is defined
-
-- debug:
-    msg: "latest terraform release: {{ terraform_version }}"
-  run_once: true
-  when: latest_terraform_release is not skipped
-        and latest_terraform_release.url is defined
 
 - name: download archived terraform binary
   unarchive:
-    remote_src: yes
-    src: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
-    dest: "{{ terraform_linux_binary | dirname }}"
-    creates: "{{ terraform_allow_reinstall_terraform | ternary(omit, terraform_linux_binary) }}"
-  # fix intermittent network failures on .ru boxes
+    remote_src: true
+    src: "{{ latest_terraform_release.url }}"
+    dest: "{{ terraform_linux_binary |dirname }}"
+  when: latest_terraform_release is changed
+  # fix intermittent network failures
   register: download_result
   until: "'timed out' not in download_result.msg |default('')"
 ...
