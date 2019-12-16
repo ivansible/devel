@@ -1,3 +1,48 @@
 ---
 # defaults for ivansible.lin_devel
+
+lindev_golang_version: 1.13
+
+lindev_pid_in_core: true
+
+
+ngrok_zip_url: latest
+# by default proxy is controlled by target environment
+ngrok_zip_proxy: ""
+
+
+lindev_packages:
+  # archivers
+  - gzip
+  - unzip
+  - unrar
+  # network
+  - iputils-ping
+  - traceroute
+  - dnsutils
+  - curl
+  - wget
+  - netcat
+  - rsync
+  - iperf
+  # development
+  - build-essential
+  - strace
+  - git
+  # utilities
+  - vim
+  - nano
+  - jq
+  - tmux
+  - shellcheck
+  # monitoring
+  - nethogs
+  - iotop
+  # for top
+  - procps
+  # htop is similar to top and allows to scroll
+  - htop
+  # virtualization
+  - virt-what
+  - cpu-checker
 ...

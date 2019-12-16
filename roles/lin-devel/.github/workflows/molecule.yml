@@ -44,8 +44,7 @@ jobs:
 
       - name: Run test
         shell: bash
-        run: |
-          molecule test -s $SCENARIO
+        run: cd ivansible/$ROLE_NAME && molecule test -s $SCENARIO
 
   docker_test:
     name: tests in docker
@@ -57,7 +56,7 @@ jobs:
       IVATEST_FIREWALL: none
       IVATEST_SSH_SERVER: true
 
-    steps:  # copy-pasting above steps since anchors are unsupported
+    steps: # copy-pasting above steps since anchors are unsupported
       - name: Checkout
         uses: actions/checkout@master
         with:
@@ -74,6 +73,5 @@ jobs:
 
       - name: Run test
         shell: bash
-        run: |
-          molecule test -s $SCENARIO
+        run: cd ivansible/$ROLE_NAME && molecule test -s $SCENARIO
 ...
