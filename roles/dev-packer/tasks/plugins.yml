@@ -5,7 +5,7 @@
 #   https://github.com/AnchorFree/packer-builder-vultr/blob/master/bintray.md
 - name: download plugin packer-builder-vultr
   unarchive:
-    remote_src: yes
+    remote_src: true
     src: "{{ url_releases }}/v{{ packer_builder_vultr_version }}/packer-builder-vultr_v{{ packer_builder_vultr_version }}_linux_amd64.zip"
     dest: "{{ packer_plugin_dir }}"
     exclude:

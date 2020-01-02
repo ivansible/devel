@@ -2,7 +2,7 @@
 - block:
     - name: install packer binary
       import_tasks: install.yml
-      become: yes
+      become: true
       tags: dev_packer_install
 
     - name: create directory for packer plugins
@@ -18,6 +18,6 @@
       import_tasks: user.yml
       when: is_permitted |bool
   tags:
-    - dev_packer
+    - dev_packer_all
     - ip4only
 ...

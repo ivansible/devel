@@ -6,7 +6,7 @@
   # in the project changelog.
   uri:
     url: https://raw.githubusercontent.com/hashicorp/packer/master/CHANGELOG.md
-    return_content: yes
+    return_content: true
     creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
   register: latest_packer_release
   when: packer_version == 'latest'
@@ -31,13 +31,13 @@
       assert:
         that: packer_version is match('^[0-9.]+$')
         msg: "a valid packer version must contain only dots and digits"
-        quiet: yes
+        quiet: true
   when: latest_packer_release is not skipped
         and latest_packer_release.content is defined
 
 - name: download archived packer binary
   unarchive:
-    remote_src: yes
+    remote_src: true
     src: https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip
     dest: "{{ packer_linux_binary | dirname }}"
     creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"

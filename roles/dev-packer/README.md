@@ -22,18 +22,18 @@ checked out in the given local directory.
     packer_version: latest
 Version of the packer binary to install.
 
-    packer_allow_reinstall_packer: no
-    packer_allow_reinstall_plugins: yes
+    packer_allow_reinstall_packer: false
+    packer_allow_reinstall_plugins: true
 Allows to override already installed binaries.
 
 
 ## Tags
 
-- `ip4only` -- Mark this role as inappropriate for IPv6-only hosts (due to github)
-- `dev_packer` -- The whole role
-- `dev_packer_install` -- Install Packer binary
-- `dev_packer_plugins` -- Install 3rd-party Packer plugins
-- `dev_packer_templates` -- Checkout user's packer templates
+- `ip4only` -- mark this role as inappropriate for IPv6-only hosts (due to github)
+- `dev_packer_install` -- install Packer binary
+- `dev_packer_plugins` -- install 3rd-party Packer plugins
+- `dev_packer_templates` -- checkout user's packer templates
+- `dev_packer_all` -- the whole role
 
 
 ## Dependencies
@@ -54,4 +54,4 @@ MIT
 
 ## Author Information
 
-Created in 2019 by [IvanSible](https://github.com/ivansible)
+Created in 2019-2020 by [IvanSible](https://github.com/ivansible)

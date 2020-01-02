@@ -7,9 +7,9 @@
     repo: "{{ packer_templates_repo }}"
     version: "{{ packer_templates_branch }}"
     # only clone, don't choke on pending modifications
-    update: no
-    accept_hostkey: yes
-  become: no
+    update: false
+    accept_hostkey: true
+  become: false
   when: packer_templates_repo and is_permitted |bool
   tags: dev_packer_templates
 ...
