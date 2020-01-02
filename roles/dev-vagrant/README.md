@@ -25,7 +25,7 @@ This can be one of:
 If this list is not empty, a number of vagrant plugins will be installed
 locally for target user (or reinstalled if vagrnant was upgraded).
 
-    vagrant_allow_reinstall: no
+    vagrant_allow_reinstall: false
 
 Allows to refresh already downloaded redistributables.
 
@@ -68,4 +68,4 @@ MIT
 
 ## Author Information
 
-Created in 2018 by [IvanSible](https://github.com/ivansible)
+Created in 2018-2020 by [IvanSible](https://github.com/ivansible)

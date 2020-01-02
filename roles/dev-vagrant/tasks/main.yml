@@ -1,6 +1,4 @@
 ---
-# tasks for ivansible.dev_vagrant
-
 - name: vagrant from ppa (not recommended)
   apt:
     name: vagrant
@@ -12,14 +10,14 @@
     - dev_vagrant
 
 - import_tasks: vagrant.yml
-  become: yes
+  become: true
   when: vagrant_package_url != 'ppa'
   tags:
     - dev_vaginstall
     - dev_vagrant
 
 - import_tasks: plugins.yml
-  become: no
+  become: false
   when: vagrant_plugin_list |length > 0
   tags:
     - dev_vagplugins
@@ -31,9 +29,9 @@
     repo: "{{ vagrant_files_repo }}"
     version: "{{ vagrant_files_branch }}"
     # only clone, don't choke on pending modifications
-    update: no
-    accept_hostkey: yes
-  when: vagrant_files_repo != '' and is_permitted |bool # noqa 602
+    update: false
+    accept_hostkey: true
+  when: vagrant_files_repo != '' and is_permitted |bool  # noqa 602
   tags:
     - dev_vagrantfiles
     - dev_vagrant
@@ -45,9 +43,10 @@
     creates: ~/.vagrant.d/data/vagrant_login_token
   environment:
     _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
-  become: no
-  ignore_errors: yes
-  when: vagrant_cloud_token != '' and is_permitted |bool and vagrant_use_login |bool # noqa 602
+  become: false
+  ignore_errors: true
+  when: is_permitted |bool and vagrant_use_login |bool
+        and vagrant_cloud_token != ''  # noqa 602
   tags:
     - dev_vaglogin
     - dev_vagrant

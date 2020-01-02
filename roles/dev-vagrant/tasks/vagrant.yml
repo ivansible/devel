@@ -5,8 +5,7 @@
     connection: local
     creates: "{{ (vagrant_allow_reinstall | bool or true)
                | ternary(omit, '/usr/bin/vagrant') }}"
-    return_content: yes
-
+    return_content: true
   register: latest_vagrant_release
   when: vagrant_package_url == 'latest'
 
