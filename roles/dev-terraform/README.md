@@ -47,7 +47,7 @@ Repositories and versions of terraform plugins to install.
 
 ## Dependencies
 
-This role implicitly depends on the `ivansible.dev_user`.
+This role implicitly depends on the role `ivansible.dev_user`.
 
 Note: Currently this dependency is **not** recorded in `meta/main.yml`.
 
