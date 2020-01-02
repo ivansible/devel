@@ -3,7 +3,7 @@
   block:
     - name: install terraform binary
       import_tasks: install.yml
-      become: yes
+      become: true
       tags: dev_terraform_install
 
     - name: create directory for terraform plugins

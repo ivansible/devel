@@ -24,15 +24,15 @@
     repo: "{{ terraform_plans_repo }}"
     version: "{{ terraform_plans_branch }}"
     # only clone, don't choke on pending modifications
-    update: no
-    accept_hostkey: yes
-  when: terraform_plans_repo != '' and 'permitted' in group_names # noqa 602
+    update: false
+    accept_hostkey: true
+  when: terraform_plans_repo != '' and 'permitted' in group_names  # noqa 602
   tags: dev_terraform_plans
 
 - name: setup terraform enterprise (free) token, if permitted
   blockinfile:
     path: ~/.terraformrc
-    create: yes
+    create: true
     mode: 0600
     block: |
       credentials "app.terraform.io" {
@@ -41,6 +41,6 @@
       plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
       disable_checkpoint = true
     marker: "# == {mark} terraform enterprise (free) =="
-  when: terraform_api_token != '' and is_permitted |bool # noqa 602
+  when: terraform_api_token != '' and is_permitted |bool  # noqa 602
   tags: dev_terraform_api_token
 ...

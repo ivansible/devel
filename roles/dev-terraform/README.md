@@ -22,7 +22,7 @@ checked out in the given local directory.
 
     terraform_version: latest
 Version of terraform binary to install.
-    terraform_allow_reinstall: no
+    terraform_allow_reinstall: false
 Allows to override already installed binary.
 
     terraform_provisioner_ansible_repo_owner: radekg
@@ -64,4 +64,4 @@ MIT
 
 ## Author Information
 
-Created in 2019 by [IvanSible](https://github.com/ivansible)
+Created in 2019-2020 by [IvanSible](https://github.com/ivansible)

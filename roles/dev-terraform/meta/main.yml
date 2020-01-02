@@ -19,6 +19,8 @@ galaxy_info:
   galaxy_tags:
     - linux
     - ansible
+    - hashicorp
+    - terraform
 
   github_branch: master
 ...
