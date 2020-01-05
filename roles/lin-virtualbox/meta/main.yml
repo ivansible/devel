@@ -17,7 +17,8 @@ galaxy_info:
 
   galaxy_tags:
     - linux
-    - ansible
+    - virtualbox
+    - virtualization
 
   github_branch: master
 ...

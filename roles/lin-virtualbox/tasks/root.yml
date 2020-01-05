@@ -5,9 +5,10 @@
 
 - name: add virtualbox apt repository
   apt_repository:
-    repo: deb http://download.virtualbox.org/virtualbox/debian {{ ansible_lsb.codename }} contrib
+    repo: "deb http://download.virtualbox.org/virtualbox/debian {{ ansible_lsb.codename }} contrib"
     filename: virtualbox
-    update_cache: yes
+    mode: 0644
+    update_cache: true
 
 - name: install virtualbox package
   apt:
