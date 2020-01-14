@@ -20,7 +20,8 @@
   become: true
   # temporary variables to reduce length of lines
   vars:
-    url_releases: https://github.com/ivandeex/packer-builder-vultr/releases/download
+    repo_owner: ivandeex
+    url_releases: https://github.com/{{ repo_owner }}/packer-builder-vultr/releases/download
   # fix intermittent network failures
   register: download_result
   until: "'timed out' not in download_result.msg |default('')"

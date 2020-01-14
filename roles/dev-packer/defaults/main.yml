@@ -6,7 +6,7 @@ packer_version: latest
 packer_linux_binary: /usr/local/bin/packer
 packer_allow_reinstall_packer: false
 
-packer_builder_vultr_version: '0.2.1'
+packer_builder_vultr_version: '0.2.2'
 packer_plugin_dir: "{{ ansible_user_dir }}/.packer.d/plugins"
 packer_allow_reinstall_plugins: true
 
