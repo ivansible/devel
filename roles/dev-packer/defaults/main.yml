@@ -2,7 +2,7 @@
 # defaults for ivansible.dev_packer
 is_permitted: false
 
-packer_version: latest
+packer_version: 1.4.5
 packer_linux_binary: /usr/local/bin/packer
 packer_allow_reinstall_packer: false
 
