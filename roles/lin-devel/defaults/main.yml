@@ -10,6 +10,8 @@ ngrok_zip_url: latest
 # by default proxy is controlled by target environment
 ngrok_zip_proxy: ""
 
+lindev_upgrade_pup: false
+
 
 lindev_packages:
   # archivers
@@ -35,6 +37,8 @@ lindev_packages:
   - jq
   - tmux
   - shellcheck
+  # for /usr/bin/xpath
+  - libxml-xpath-perl
   # monitoring
   - nethogs
   - iotop

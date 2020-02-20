@@ -11,6 +11,7 @@ It installs common development packages:
   - archivers: gzip, unzip, unrar
   - development tools: git, vim, etc
   - network tools: dig, netcat, iperf, etc
+  - html tools: curl, wget, [pup](https://github.com/ericchiang/pup), [xpath](https://manpages.ubuntu.com/manpages/xenial/en/man1/xpath.1p.html)
   - build-essential packages
   - ngrok
 
@@ -30,12 +31,17 @@ Available variables are listed below, along with default values.
 
 Golang toolchain version to install (skip install if empty).
 
+    lindev_upgrade_pup: false
+If `true`, pup will be upgraded whenever new version is found.
+If `false` (the default), pup will be installed only when needed.
+
 
 ## Tags
 
 - `lindev_packages` - install development packages
 - `lindev_ngrok` - install ngrok
 - `lindev_golang` - install golang toolchain
+- `lindev_pup` - install [pup](https://github.com/ericchiang/pup)
 - `lindev_utils` - utilities (gendiff)
 - `lindev_sysctl` - tweak kernel settings for development
 - `lindev_all` - all of the above

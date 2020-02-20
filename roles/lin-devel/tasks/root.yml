@@ -2,8 +2,7 @@
 - name: install common development packages
   apt:
     name: "{{ lindev_packages }}"
-  tags:
-    - lindev_packages
+  tags: lindev_packages
 
 - name: install ngrok
   import_tasks: ngrok.yml
@@ -15,16 +14,18 @@
 - name: install golang
   import_tasks: golang.yml
   when: lindev_golang_version != '' # noqa 602
-  tags:
-    - lindev_golang
+  tags: lindev_golang
+
+- name: install pup
+  import_tasks: pup.yml
+  tags: lindev_pup
 
 
 - name: directory for user binaries
   file:
     path: /usr/local/bin
     state: directory
-  tags:
-    - lindev_utils
+  tags: lindev_utils
 
 - name: install gendiff utility
   copy:
@@ -32,8 +33,7 @@
     dest: /usr/local/bin/
     mode: 0755
     force: false
-  tags:
-    - lindev_utils
+  tags: lindev_utils
 
 
 - name: enable pid in core dump file names for multi-threaded debugging
@@ -44,8 +44,7 @@
     sysctl_file: /etc/sysctl.d/77-debug.conf
   when: lindev_pid_in_core |bool
         and allow_sysctl |bool
-  tags:
-    - lindev_sysctl
+  tags: lindev_sysctl
 
 - name: enable sys-req debugging of the kernel
   sysctl:
@@ -54,6 +53,5 @@
     state: absent
     sysctl_file: /etc/sysctl.d/77-debug.conf
   when: allow_sysctl |bool
-  tags:
-    - lindev_sysctl
+  tags: lindev_sysctl
 ...

@@ -1,0 +1,19 @@
+---
+- name: detect latest pup release
+  github_release:
+    repository: ericchiang/pup
+    release: latest
+    creates: /usr/local/bin/pup
+    reinstall: "{{ lindev_upgrade_pup |bool }}"
+    strip_v: false
+    template: '{download_url}/pup_{ver}_linux_amd64.zip'
+  tags: skip_ansible_lint
+  register: latest_pup_release
+
+- name: download and unpack pup
+  unarchive:
+    remote_src: true
+    src: "{{ latest_pup_release.url }}"
+    dest: /usr/local/bin
+  when: latest_pup_release is changed
+...
