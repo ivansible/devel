@@ -1,3 +1,5 @@
 ---
 # defaults for ivansible.lin_go
+
+lin_go_version: 1.13
 ...

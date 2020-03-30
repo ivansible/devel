@@ -1,6 +1,7 @@
 ---
-- name: become root and install role
+- name: become root and install golang
   import_tasks: root.yml
   become: true
+  when: lin_go_version |default('')
   tags: role_all
 ...

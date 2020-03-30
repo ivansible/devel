@@ -4,9 +4,7 @@
 [![Travis Test Status](https://travis-ci.org/ivansible/lin-go.svg?branch=master)](https://travis-ci.org/ivansible/lin-go)
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-ivansible.lin__go-68a.svg?style=flat)](https://galaxy.ansible.com/ivansible/lin_go/)
 
-This role will:
- - action1;
- - action2;
+This role installs Go-lang toolchain on linux.
 
 
 ## Requirements
@@ -16,16 +14,14 @@ None
 
 ## Variables
 
-Available variables are listed below, along with default values.
+    lin_go_version: 1.13
 
-    variable1: 1
-    variable2: 2
+Golang version to install (skip install if empty).
 
 
 ## Tags
 
-- `role1_tag1` -- action1
-- `role1_tag2` -- action2
+- `lin_go_all` -- all tasks
 
 
 ## Dependencies
@@ -35,11 +31,9 @@ None
 
 ## Example Playbook
 
-    - hosts: vagrant-boxes
+    - hosts: devhost
       roles:
-         - role: ivansible.lin_go
-           variable1: 1
-           variable2: 2
+         - ivansible.lin_go
 
 
 ## License
