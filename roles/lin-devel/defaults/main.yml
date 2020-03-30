@@ -1,8 +1,6 @@
 ---
 # defaults for ivansible.lin_devel
 
-lindev_golang_version: 1.13
-
 lindev_pid_in_core: true
 
 

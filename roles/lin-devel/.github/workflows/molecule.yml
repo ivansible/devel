@@ -1,5 +1,6 @@
 ---
 name: Molecule test
+# yamllint disable-line rule:truthy
 on:
   push:
     branches:
@@ -60,7 +61,7 @@ jobs:
       IVATEST_FIREWALL: none
       IVATEST_SSH_SERVER: true
 
-    steps: # copy-pasting above steps since anchors are unsupported
+    steps:  # copy-pasting above steps since anchors are unsupported
       - name: Checkout
         uses: actions/checkout@master
         with:

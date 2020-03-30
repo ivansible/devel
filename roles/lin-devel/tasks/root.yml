@@ -11,11 +11,6 @@
     - lindev_ngrok
     - ip4only
 
-- name: install golang
-  import_tasks: golang.yml
-  when: lindev_golang_version != '' # noqa 602
-  tags: lindev_golang
-
 - name: install pup
   import_tasks: pup.yml
   tags: lindev_pup

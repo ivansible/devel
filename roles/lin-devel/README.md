@@ -7,7 +7,6 @@
 This role configures remote host for development.
 It installs common development packages:
 
-  - golang toolchain
   - archivers: gzip, unzip, unrar
   - development tools: git, vim, etc
   - network tools: dig, netcat, iperf, etc
@@ -24,12 +23,6 @@ None
 
 
 ## Variables
-
-Available variables are listed below, along with default values.
-
-    lindev_golang_version: 1.13
-
-Golang toolchain version to install (skip install if empty).
 
     lindev_upgrade_pup: false
 If `true`, pup will be upgraded whenever new version is found.
