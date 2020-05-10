@@ -6,8 +6,9 @@
     mode: 0644
   register: add_golang_ppa_result
   until: add_golang_ppa_result is successful
+  when: ansible_lsb.release is version('20.04','<')
 
-- name: install golang from ppa
+- name: install golang package
   apt:
     name: golang-{{ lin_go_version }}
 
