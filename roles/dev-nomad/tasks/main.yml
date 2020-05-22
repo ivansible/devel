@@ -1,6 +1,19 @@
 ---
-- name: become root and install role
-  import_tasks: root.yml
+- name: setup consul as root
+  import_tasks: consul.yml
   become: true
-  tags: role_all
+  tags:
+    - dev_consul_all
+
+- name: setup nomad as root
+  import_tasks: nomad.yml
+  become: true
+  tags:
+    - dev_nomad_all
+
+- name: restart hashicorp services
+  meta: flush_handlers
+  tags:
+    - dev_consul_all
+    - dev_nomad_all
 ...

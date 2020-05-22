@@ -1,0 +1,18 @@
+[Unit]
+Description="HashiCorp Consul"
+Documentation=https://www.consul.io/
+Requires=network-online.target
+After=network-online.target
+ConditionFileNotEmpty={{ consul_config_file }}
+
+[Service]
+User={{ consul_user }}
+Group={{ consul_group }}
+ExecStart={{ consul_binary }} agent -config-dir={{ consul_etc_dir }}/
+ExecReload={{ consul_binary }} reload
+KillMode=process
+Restart=on-failure
+LimitNOFILE={{ consul_limit_nofile }}
+
+[Install]
+WantedBy=multi-user.target

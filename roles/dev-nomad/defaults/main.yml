@@ -1,3 +1,51 @@
 ---
 # defaults for ivansible.dev_nomad
+
+consul_version: 1.7.3
+consul_upgrade: false
+
+consul_etc_dir: /etc/consul.d
+consul_data_dir: /var/lib/consul
+consul_log_file: /var/log/consul/consul.log
+consul_run_dir: /run/consul
+
+consul_config_file: "{{ consul_etc_dir }}/consul.hcl"
+consul_binary: /usr/local/bin/consul
+
+consul_datacenter: dc1
+consul_domain: consul
+consul_encrypt_enable: true
+consul_encrypt_key: ~
+
+consul_bootstrap_expect: 1
+consul_raft_multiplier: 1
+consul_server_role: false
+consul_leader_host: "{{ consul_adv_addr_lan }}"
+
+consul_user: consul
+consul_group: consul
+consul_limit_nofile: 65536
+
+consul_bind_addr: "{{ ansible_default_ipv4.address }}"
+consul_adv_addr_lan: "{{ consul_bind_addr }}"
+consul_adv_addr_wan: "{{ consul_bind_addr }}"
+
+consul_adv_addr_serf_lan: "{{ consul_adv_addr_lan }}:{{ consul_port_serf_lan }}"
+consul_adv_addr_serf_wan: "{{ consul_adv_addr_wan }}:{{ consul_port_serf_wan }}"
+consul_adv_addr_rpc: "{{ consul_bind_addr }}:{{ consul_port_server_rpc }}"
+
+consul_client_addr: 127.0.0.1
+consul_addr_dns: "{{ consul_client_addr }}"
+consul_addr_http: "{{ consul_client_addr }}"
+consul_addr_https: "{{ consul_client_addr }}"
+consul_addr_rpc: "{{ consul_client_addr }}"
+consul_addr_grpc: "{{ consul_client_addr }}"
+
+consul_port_dns: 8600
+consul_port_http: 8500
+consul_port_serf_lan: 8301
+consul_port_serf_wan: 8302
+consul_port_server: 8300
+consul_port_https: -1
+consul_port_grpc: -1
 ...

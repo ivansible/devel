@@ -1,0 +1,91 @@
+---
+- name: add consul group
+  group:
+    name: "{{ consul_group }}"
+
+- name: add consul user
+  user:
+    name: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    system: true
+
+- name: install consul binary
+  unarchive:
+    remote_src: true
+    src: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
+    dest: "{{ consul_binary | dirname }}"
+    creates: "{{ consul_upgrade |bool |ternary(omit, consul_binary) }}"
+    owner: root
+    group: "{{ consul_group }}"
+    mode: 0755
+  notify: restart consul service
+
+- name: create consul directories
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ consul_etc_dir }}"
+      mode: '0700'
+    - path: "{{ consul_data_dir }}"
+      mode: '0700'
+    - path: "{{ consul_log_file |dirname }}"
+      mode: '0755'
+    - path: "{{ consul_run_dir }}"
+      mode: '0755'
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: generate consul encryption key
+  block:
+    - name: run consul keygen
+      command: "{{ consul_binary }} keygen"
+      register: _consul_keygen_result
+
+    - name: set fact with consul encryption key
+      set_fact:
+        consul_encrypt_key: "{{ _consul_keygen_result.stdout_lines.0 }}"
+  when:
+    - consul_encrypt_enable |bool
+    - not consul_encrypt_key |default('')
+
+- name: configure consul
+  template:
+    src: consul/consul.hcl
+    dest: "{{ consul_config_file }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: 0640
+  notify: restart consul service
+
+- name: create consul service
+  template:
+    src: consul/consul.service
+    dest: /etc/systemd/system/consul.service
+  register: _consul_service_result
+  notify: restart consul service
+
+- name: enable consul service
+  systemd:
+    name: consul
+    state: started
+    enabled: true
+    daemon_reload: "{{ _consul_service_result is changed }}"
+
+- name: open consul ports in ferm
+  ferm_port:
+    port:
+      ## https://www.consul.io/docs/install/ports
+      - "{{ consul_port_server }}/tcp"
+      - "{{ consul_port_serf_lan }}"
+      - "{{ consul_port_serf_wan }}"
+      - "{{ consul_port_http }}/tcp"
+      - "{{ consul_port_dns }}"
+    zone: internal
+    comment: consul
+  when: lin_firewall == 'ferm'
+  tags: skip_ansible_lint
+...

@@ -1,3 +1,10 @@
 ---
 # handlers for ivansible.dev_nomad
+
+- name: restart consul service
+  systemd:
+    name: consul
+    state: restarted
+    enabled: true
+  become: true
 ...
