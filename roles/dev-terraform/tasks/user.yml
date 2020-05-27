@@ -19,7 +19,7 @@
     - name: user-local completion for terraform (will install globally if it fails)
       lineinfile:
         path: ~/.local/bashrc/5completion.sh
-        line: "complete -C {{ terraform_linux_binary }} terraform"
+        line: "complete -C {{ terraform_binary }} terraform"
       become: false
   rescue:
     # fall back if ivansible.dev_user wasn't installed
@@ -30,7 +30,7 @@
           # bash completion for HashiCorp Terraform
           # ansible-managed
           if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -n "${BASH_COMPLETION_VERSINFO-}" ]; then
-              complete -C {{ terraform_linux_binary }} terraform
+              complete -C {{ terraform_binary }} terraform
           fi
       become: true
   tags: dev_terraform_completion

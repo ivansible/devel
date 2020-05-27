@@ -1,62 +1,68 @@
 ---
-# install 3rd-party terraform plugins
+## install 3rd-party terraform plugins
 
 - name: install plugin terraform-provider-vultr
   unarchive:
     remote_src: true
-    src: "{{ repo_url }}/releases/download/v{{ terraform_provider_vultr_version }}/{{ file_name }}_linux_amd64.tar.gz"
+    src: "{{ release_url }}/{{ file_name }}_linux_amd64.tar.gz"
     dest: "{{ terraform_plugin_dir }}"
     exclude:
       - LICENSE
       - README.md
-    creates: "{{ terraform_allow_reinstall_plugins |ternary(omit, terraform_plugin_dir + '/' + file_name) }}"
-    # perform operations as root - workaround for unarchive issue in docker
-    # see https://github.com/ansible/ansible/issues/49284
+    creates: "{{ terraform_upgrade_plugins |bool |ternary(omit, file_path) }}"
+    ## perform operations as root - workaround for unarchive issue in docker
+    ## see https://github.com/ansible/ansible/issues/49284
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid |string }}"
     mode: 0755
   become: true
-  # temporary variables to reduce length of lines
+  ## temporary variables to reduce clutter
   vars:
     repo_url: "https://github.com/{{ terraform_provider_vultr_repo_owner }}/terraform-provider-vultr"
+    release_url: "{{ repo_url }}/releases/download/v{{ terraform_provider_vultr_version }}"
     file_name: "terraform-provider-vultr_v{{ terraform_provider_vultr_version }}"
-  # fix intermittent network failures on .ru boxes
-  register: download_result
-  until: "'timed out' not in download_result.msg |default('')"
+    file_path: "{{ terraform_plugin_dir }}/{{ file_name }}"
+  ## fix intermittent network failures
+  register: _terraform_vultr_download
+  until: _terraform_vultr_download.msg |default('') is not search('timed out')
 
 - name: install plugin terraform-provisioner-ansible (from tarball)
   unarchive:
     remote_src: true
-    src: "{{ repo_url }}/releases/download/v{{ terraform_provisioner_ansible_version }}/{{ file_name }}_linux_amd64.zip"
+    src: "{{ release_url }}/{{ file_name }}_linux_amd64.zip"
     dest: "{{ terraform_plugin_dir }}"
     exclude:
       - LICENSE
       - README.md
-    creates: "{{ terraform_allow_reinstall_plugins |ternary(omit, terraform_plugin_dir + '/' + file_name) }}"
-    # perform operations as root - workaround for unarchive issue in docker
-    # see https://github.com/ansible/ansible/issues/49284
+    creates: "{{ terraform_upgrade_plugins |bool |ternary(omit, file_path) }}"
+    ## perform operations as root - workaround for unarchive issue in docker
+    ## see https://github.com/ansible/ansible/issues/49284
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid |string }}"
     mode: 0755
   become: true
-  # temporary variables to reduce length of lines
+  ## temporary variables to reduce clutter
   vars:
     repo_url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible"
+    release_url: "{{ repo_url }}/releases/download/v{{ terraform_provisioner_ansible_version }}"
     file_name: "terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}"
-  # fix intermittent network failures on .ru boxes
-  register: download_result
-  until: "'timed out' not in download_result.msg |default('')"
-  # choose between tarball and binary
+    file_path: "{{ terraform_plugin_dir }}/{{ file_name }}"
+  ## fix intermittent network failures
+  register: _terraform_ansible_download
+  until: _terraform_ansible_download.msg |default('') is not search('timed out')
+  ## choose between tarball and binary
   when: terraform_provisioner_ansible_is_tarball |bool
 
 - name: install plugin terraform-provisioner-ansible (as binary)
   get_url:
-    url: "{{ repo_url }}/releases/download/v{{ terraform_provisioner_ansible_version }}/{{ web_file_name }}"
-    dest: "{{ terraform_plugin_dir }}/terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}"
+    url: "{{ release_url }}/{{ web_file_name }}"
+    dest: "{{ terraform_plugin_dir }}/{{ disk_file_name }}"
     mode: 0755
-    force: "{{ terraform_allow_reinstall_plugins }}"
+    force: "{{ terraform_upgrade_plugins |bool }}"
   vars:
     repo_url: "https://github.com/{{ terraform_provisioner_ansible_repo_owner }}/terraform-provisioner-ansible"
+    release_url: "{{ repo_url }}/releases/download/v{{ terraform_provisioner_ansible_version }}"
     web_file_name: "terraform-provisioner-ansible-linux-amd64_v{{ terraform_provisioner_ansible_version }}"
+    disk_file_name: "terraform-provisioner-ansible_v{{ terraform_provisioner_ansible_version }}"
   when: not terraform_provisioner_ansible_is_tarball |bool
 ...

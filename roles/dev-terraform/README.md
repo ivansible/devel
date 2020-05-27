@@ -22,8 +22,10 @@ checked out in the given local directory.
 
     terraform_version: latest
 Version of terraform binary to install.
-    terraform_allow_reinstall: false
-Allows to override already installed binary.
+
+    terraform_upgrade: false
+    terraform_upgrade_plugins: false
+Allows to upgrade already installed packages.
 
     terraform_provisioner_ansible_repo_owner: radekg
     terraform_provisioner_ansible_version: v...

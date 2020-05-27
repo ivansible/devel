@@ -3,11 +3,11 @@
 is_permitted: false
 
 terraform_version: latest
-terraform_allow_reinstall_terraform: false
-terraform_linux_binary: /usr/local/bin/terraform
+terraform_upgrade: false
+terraform_binary: /usr/local/bin/terraform
 
 terraform_plugin_dir: "{{ ansible_user_dir }}/.terraform.d/plugins"
-terraform_allow_reinstall_plugins: false
+terraform_upgrade_plugins: false
 terraform_provisioner_ansible_repo_owner: radekg
 terraform_provisioner_ansible_version: 2.2.1
 terraform_provisioner_ansible_is_tarball: false
