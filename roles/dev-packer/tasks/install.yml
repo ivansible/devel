@@ -1,44 +1,21 @@
 ---
-- name: parse packer changelog (simple markdown)
-  # Packer uses only Github tags and does not mark the latest release
-  # or any releases at all, so we use a different approach:
-  # search for a first line like `## 1.4.0 (April 11, 2019)`
-  # in the project changelog.
-  uri:
-    url: https://raw.githubusercontent.com/hashicorp/packer/master/CHANGELOG.md
-    return_content: true
-    creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
-  register: latest_packer_release
-  when: packer_version == 'latest'
-  # fix intermittend network failures
-  until: latest_packer_release is successful
-
-- block:
-    - name: extract packer release from changelog
-      # look specifically for releases "1.2.3 (Month 31, YYYY)"
-      # and skip betas without release date like "0.1 (upcoming)"
-      set_fact:
-        packer_version:
-          "{{ latest_packer_release.content
-            | regex_search('## +[0-9.]+ [(].+?, [0-9]+[)]')
-            | regex_search('[0-9.]+') }}"
-
-    - debug:
-        msg: "latest packer release: {{ packer_version }}"
-      run_once: true
-
-    - name: validate extracted release string
-      assert:
-        that: packer_version is match('^[0-9.]+$')
-        msg: "a valid packer version must contain only dots and digits"
-        quiet: true
-  when: latest_packer_release is not skipped
-        and latest_packer_release.content is defined
+- name: detect latest packer release
+  github_release:
+    repository: hashicorp/packer
+    release: "{{ packer_version }}"
+    strip_v: true
+    template: https://releases.hashicorp.com/packer/{ver}/packer_{ver}_linux_amd64.zip
+    creates: "{{ packer_binary }}"
+    reinstall: "{{ packer_upgrade |bool }}"
+  register: _packer_release
 
 - name: download archived packer binary
   unarchive:
     remote_src: true
-    src: https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip
-    dest: "{{ packer_linux_binary | dirname }}"
-    creates: "{{ packer_allow_reinstall_packer | ternary(omit, packer_linux_binary) }}"
+    src: "{{ _packer_release.url }}"
+    dest: "{{ packer_binary |dirname }}"
+  when: _packer_release is changed
+  ## fix intermittent network failures
+  register: _packer_download
+  until: _packer_download.msg |default('') is not search('timed out')
 ...

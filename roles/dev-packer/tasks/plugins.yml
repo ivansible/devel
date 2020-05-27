@@ -1,28 +1,31 @@
 ---
-# install 3rd-party packer plugins
+## install 3rd-party packer plugins
 
-# see:
-#   https://github.com/AnchorFree/packer-builder-vultr/blob/master/bintray.md
+## see:
+## https://github.com/AnchorFree/packer-builder-vultr/blob/master/bintray.md
 - name: download plugin packer-builder-vultr
   unarchive:
     remote_src: true
-    src: "{{ url_releases }}/v{{ packer_builder_vultr_version }}/packer-builder-vultr_v{{ packer_builder_vultr_version }}_linux_amd64.zip"
+    src: "{{ release_url }}/{{ web_file_name }}"
     dest: "{{ packer_plugin_dir }}"
     exclude:
       - LICENSE
       - README.md
-    creates: "{{ packer_allow_reinstall_plugins | ternary(omit, packer_plugin_dir + '/packer-builder-vultr') }}"
-    # perform operations as root - workaround for unarchive issue in docker
-    # see https://github.com/ansible/ansible/issues/49284
+    creates: "{{ packer_upgrade_plugins |bool |ternary(omit, disk_file_path) }}"
+    ## perform operations as root - workaround for unarchive issue in docker
+    ## see https://github.com/ansible/ansible/issues/49284
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid |string }}"
     mode: 0755
   become: true
-  # temporary variables to reduce length of lines
+  ## temporary variables to reduce length of lines
   vars:
     repo_owner: ivandeex
-    url_releases: https://github.com/{{ repo_owner }}/packer-builder-vultr/releases/download
-  # fix intermittent network failures
-  register: download_result
-  until: "'timed out' not in download_result.msg |default('')"
+    repo_url: "https://github.com/{{ repo_owner }}/packer-builder-vultr"
+    release_url: "{{ repo_url }}/releases/download/v{{ packer_builder_vultr_version }}"
+    web_file_name: "packer-builder-vultr_v{{ packer_builder_vultr_version }}_linux_amd64.zip"
+    disk_file_path: "{{ packer_plugin_dir }}/packer-builder-vultr"
+  ## fix intermittent network failures
+  register: _packer_vultr_download
+  until: _packer_vultr_download.msg |default('') is not search ('timed out')
 ...
