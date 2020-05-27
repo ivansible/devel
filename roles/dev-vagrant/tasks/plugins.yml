@@ -1,10 +1,11 @@
 ---
 - name: update plugins when package/ppa was installed or reinstall is allowed
   set_fact:
-    plugins_need_update:
-      "(vagrant_deb_result | default({})) is changed
-       or (vagrant_ppa_result | default({})) is changed
-       or vagrant_allow_reinstall |bool"
+    plugins_need_update: "{{ deb_changed or ppa_changed or upgrade }}"
+  vars:
+    deb_changed: "{{ vagrant_deb_result |default({}) is changed }}"
+    ppa_changed: "{{ vagrant_ppa_result | default({}) is changed }}"
+    upgrade: "{{ vagrant_upgrade |bool }}"
 
 - name: repair vagrant plugins
   command: vagrant plugin repair

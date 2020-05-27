@@ -25,9 +25,9 @@ This can be one of:
 If this list is not empty, a number of vagrant plugins will be installed
 locally for target user (or reinstalled if vagrnant was upgraded).
 
-    vagrant_allow_reinstall: false
+    vagrant_upgrade: false
 
-Allows to refresh already downloaded redistributables.
+Allows to upgrade already installed packages.
 
     vagrant_cloud_token: ""
 

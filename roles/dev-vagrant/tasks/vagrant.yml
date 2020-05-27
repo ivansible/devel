@@ -2,19 +2,21 @@
 - name: detect latest vagrant release
   uri:
     url: https://www.vagrantup.com/downloads.html
-    creates: "{{ (vagrant_allow_reinstall | bool or true)
-               | ternary(omit, '/usr/bin/vagrant') }}"
+    creates: "{{ upgrade |ternary(omit, '/usr/bin/vagrant') }}"
     return_content: true
-  register: latest_vagrant_release
-  until: latest_vagrant_release is successful
+  vars:
+    upgrade: "{{ vagrant_upgrade |bool or true }}"
+  register: _vagrant_release
+  until: _vagrant_release is successful
   when: vagrant_package_url == 'latest'
 
 - name: extract latest vagrant package url
   set_fact:
-    vagrant_package_url: "{{ latest_vagrant_release.content
+    vagrant_package_url: "{{ _vagrant_release.content
                            | regex_search('https://[^\"]+64\\.deb') }}"
-  when: latest_vagrant_release is not skipped
-        and latest_vagrant_release.content is defined
+  when:
+    - _vagrant_release is not skipped
+    - _vagrant_release.content is defined
 
 - name: detect installed vagrant release
   command: dpkg -s vagrant
@@ -39,16 +41,17 @@
       - "old vagrant version: {{ old_vagrant_ver | default('n/a', true) }}"
       - "new vagrant version: {{ new_vagrant_ver }}"
   run_once: true
-  when: latest_vagrant_release is not skipped
-        and latest_vagrant_release.content is defined
-        and old_vagrant_ver != new_vagrant_ver
+  when:
+    - _vagrant_release is not skipped
+    - _vagrant_release.content is defined
+    - old_vagrant_ver != new_vagrant_ver
 
 - name: install vagrant package from url
   apt:
     deb: "{{ vagrant_package_url }}"
-    only_upgrade: "{{ not vagrant_allow_reinstall |bool }}"
+    only_upgrade: "{{ not vagrant_upgrade |bool }}"
   register: vagrant_deb_result
   when: (old_vagrant_ver != new_vagrant_ver
          and vagrant_package_url != 'latest')
-         or vagrant_allow_reinstall |bool
+        or vagrant_upgrade |bool
 ...

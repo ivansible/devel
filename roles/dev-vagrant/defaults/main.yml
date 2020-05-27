@@ -2,7 +2,7 @@
 # defaults for ivansible.dev_vagrant
 is_permitted: false
 
-vagrant_allow_reinstall: false
+vagrant_upgrade: false
 
 # can be `ppa` (not recommended), `latest`, or url of `.deb` package
 vagrant_package_url: latest
