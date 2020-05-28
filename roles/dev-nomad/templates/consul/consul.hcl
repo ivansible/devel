@@ -31,12 +31,15 @@ ports = {
   grpc = {{ consul_port_grpc }}
 }
 
-
-{% if consul_leader_host %}
-retry_join = ["{{ consul_leader_host }}"]
-{% endif %}
-server = {{ consul_server_role |bool |to_json }}
+{% if consul_server_role |bool %}
+server = true
 bootstrap_expect = {{ consul_bootstrap_expect }}
+{%   if consul_leader_host |default('') %}
+retry_join = ["{{ consul_leader_host }}"]
+{%   endif %}
+{% else %}
+server = false
+{% endif %}
 
 ui = true
 enable_script_checks = true

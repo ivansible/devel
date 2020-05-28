@@ -1,3 +1,10 @@
 ---
 is_permitted: false
+
+consul_server_role: true
+nomad_server_role: true
+
+## static random encryption keys for idempotence
+consul_encrypt_key: fz1mfHDfDDe4zAGwRy2ntVQ7GeTfY5qZvLEFxmnDcj4=
+nomad_encrypt_key: l2w5xvGvo96rvrf8wu4a3g==
 ...

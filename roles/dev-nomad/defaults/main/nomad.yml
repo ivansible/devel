@@ -16,14 +16,13 @@ nomad_adv_addr: "{{ nomad_bind_addr }}"
 nomad_task_port_min: 26000
 nomad_task_port_max: 27000
 
+nomad_server_role: false
 nomad_datacenter: "{{ consul_datacenter }}"
 nomad_bootstrap_expect: "{{ consul_bootstrap_expect }}"
 nomad_encrypt_enable: true
 nomad_encrypt_key: ~
 
-nomad_server_role: true
 nomad_client_role: true
-
 nomad_reserve_cpu: 100
 nomad_reserve_mem: 20
 nomad_disk_gc_thold: 88

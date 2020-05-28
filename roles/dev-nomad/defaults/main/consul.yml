@@ -18,9 +18,9 @@ consul_domain: consul
 consul_encrypt_enable: true
 consul_encrypt_key: ~
 
+consul_server_role: false
 consul_bootstrap_expect: 1
 consul_raft_multiplier: 1
-consul_server_role: false
 consul_leader_host: "{{ consul_adv_addr_lan }}"
 
 consul_user: consul
