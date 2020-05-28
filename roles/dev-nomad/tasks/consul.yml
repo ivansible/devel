@@ -85,7 +85,9 @@
     zone: internal
     comment: consul
   when: lin_firewall == 'ferm'
-  tags: skip_ansible_lint
+  tags:
+    - skip_ansible_lint
+    - dev_consul_firewall
 
 - name: consul logging
   block:

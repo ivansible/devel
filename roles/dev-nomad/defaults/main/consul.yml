@@ -1,6 +1,5 @@
 ---
-# defaults for ivansible.dev_nomad
-
+consul_enable: "{{ nomad_enable }}"
 consul_version: 1.7.3
 consul_upgrade: false
 

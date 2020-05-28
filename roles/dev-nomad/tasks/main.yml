@@ -1,12 +1,14 @@
 ---
 - name: setup consul as root
   import_tasks: consul.yml
+  when: consul_enable |bool
   become: true
   tags:
     - dev_consul_all
 
 - name: setup nomad as root
   import_tasks: nomad.yml
+  when: nomad_enable |bool
   become: true
   tags:
     - dev_nomad_all

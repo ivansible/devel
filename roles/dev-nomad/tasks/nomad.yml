@@ -81,21 +81,25 @@
     zone: internal
     comment: nomad
   when: lin_firewall == 'ferm'
-  tags: skip_ansible_lint
+  tags:
+    - skip_ansible_lint
+    - dev_nomad_firewall
 
 - name: ferm ports for nomad tasks
   ferm_port:
     port: "{{ port_min }}-{{ port_max }}"
     zone: internal
     comment: nomad tasks
-    # solo_comment: true
+    solo_comment: true
   when:
     - lin_firewall == 'ferm'
     - 0 < port_min |int <= port_max |int
   vars:
     port_min: "{{ nomad_task_port_min |default(0) |int }}"
     port_max: "{{ nomad_task_port_max |default(0) |int }}"
-  tags: skip_ansible_lint
+  tags:
+    - skip_ansible_lint
+    - dev_nomad_firewall
 
 - name: nomad logging
   block:

@@ -1,4 +1,5 @@
 ---
+nomad_enable: true
 nomad_version: latest
 nomad_upgrade: false
 
