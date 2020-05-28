@@ -1,0 +1,31 @@
+---
+nomad_version: latest
+nomad_upgrade: false
+
+nomad_etc_dir: /etc/nomad.d
+nomad_data_dir: /var/lib/nomad
+
+nomad_config_file: "{{ nomad_etc_dir }}/nomad.hcl"
+nomad_binary: /usr/local/bin/nomad
+
+nomad_bind_addr: "{{ ansible_default_ipv4.address }}"
+nomad_adv_addr: "{{ nomad_bind_addr }}"
+
+nomad_task_port_min: 26000
+nomad_task_port_max: 27000
+
+nomad_datacenter: "{{ consul_datacenter }}"
+nomad_bootstrap_expect: "{{ consul_bootstrap_expect }}"
+nomad_encrypt_enable: true
+nomad_encrypt_key: ~
+
+nomad_server_role: true
+nomad_client_role: true
+
+nomad_reserve_cpu: 100
+nomad_reserve_mem: 20
+nomad_disk_gc_thold: 88
+
+nomad_restart_interval: 10
+nomad_restart_limit: 3
+...

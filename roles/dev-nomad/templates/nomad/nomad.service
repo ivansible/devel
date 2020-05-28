@@ -1,0 +1,25 @@
+[Unit]
+Description=Nomad
+Documentation=https://nomadproject.io/docs/
+Wants=network-online.target
+After=network-online.target
+{% if ansible_lsb.release is version('16.04', '>') %}
+StartLimitIntervalSec={{ nomad_restart_interval }}
+{% else %}
+StartLimitInterval={{ nomad_restart_interval }}
+{% endif %}
+StartLimitBurst={{ nomad_restart_limit }}
+
+[Service]
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ nomad_binary }} agent -config {{ nomad_etc_dir }}/
+KillMode=process
+KillSignal=SIGINT
+LimitNOFILE=infinity
+LimitNPROC=infinity
+TasksMax=infinity
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,18 +1,99 @@
 ---
-- name: nomad
-  debug: msg=nomad
+- name: detect latest nomad release
+  github_release:
+    repository: hashicorp/nomad
+    release: "{{ nomad_version }}"
+    strip_v: true
+    template: https://releases.hashicorp.com/nomad/{ver}/nomad_{ver}_linux_amd64.zip
+    creates: "{{ nomad_binary }}"
+    reinstall: "{{ nomad_upgrade |bool }}"
+  register: _nomad_release
+
+- name: install nomad binary
+  unarchive:
+    remote_src: true
+    src: "{{ _nomad_release.url }}"
+    dest: "{{ nomad_binary |dirname }}"
+  when: _nomad_release is changed
+  ## fix intermittent network failures
+  register: _nomad_download
+  until: _nomad_download.msg |default('') is not search('timed out')
+
+- name: create nomad directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - "{{ nomad_etc_dir }}"
+    - "{{ nomad_data_dir }}"
+
+- name: generate nomad encryption key
+  block:
+    - name: run nomad keygen
+      command: "{{ nomad_binary }} operator keygen"
+      register: _nomad_keygen_result
+
+    - name: set fact with nomad encryption key
+      set_fact:
+        nomad_encrypt_key: "{{ _nomad_keygen_result.stdout_lines.0 }}"
+  when:
+    - nomad_encrypt_enable |bool
+    - not nomad_encrypt_key |default('')
+
+- name: configure nomad
+  template:
+    src: nomad/nomad.hcl
+    dest: "{{ nomad_config_file }}"
+    owner: root
+    group: root
+    mode: 0640
+  notify: restart nomad service
+  vars:
+    port_min: "{{ nomad_task_port_min |default(0) |int }}"
+    port_max: "{{ nomad_task_port_max |default(0) |int }}"
+    range_min: "{{ '20000-%s' % port_min if 20000 < port_min |int else '' }}"
+    range_max: "{{ '%s-32000' % port_max if 0 < port_max |int < 32000 else '' }}"
+
+- name: create nomad service
+  template:
+    src: nomad/nomad.service
+    dest: /etc/systemd/system/nomad.service
+  register: _nomad_service_result
+  notify: restart nomad service
+
+- name: enable nomad service
+  systemd:
+    name: nomad
+    state: started
+    enabled: true
+    daemon_reload: "{{ _nomad_service_result is changed }}"
 
 - name: open nomad ports in ferm
+  ## https://nomadproject.io/docs/install/production/requirements/#ports-used
   ferm_port:
     port:
-      ## https://nomadproject.io/docs/install/production/requirements/#ports-used
       - 4646/tcp     # HTTP API
       - 4647/tcp     # RPC
       - 4648         # Serf WAN
-      - 26000-27001  # Tasks..
-    proto: tcp
     zone: internal
     comment: nomad
   when: lin_firewall == 'ferm'
+  tags: skip_ansible_lint
+
+- name: ferm ports for nomad tasks
+  ferm_port:
+    port: "{{ port_min }}-{{ port_max }}"
+    zone: internal
+    comment: nomad tasks
+    # solo_comment: true
+  when:
+    - lin_firewall == 'ferm'
+    - 0 < port_min |int <= port_max |int
+  vars:
+    port_min: "{{ nomad_task_port_min |default(0) |int }}"
+    port_max: "{{ nomad_task_port_max |default(0) |int }}"
   tags: skip_ansible_lint
 ...
