@@ -4,8 +4,10 @@ nomad_upgrade: false
 
 nomad_etc_dir: /etc/nomad.d
 nomad_data_dir: /var/lib/nomad
+nomad_log_file: /var/log/hashicorp/nomad.log
 
 nomad_config_file: "{{ nomad_etc_dir }}/nomad.hcl"
+nomad_log_max_size: "{{ consul_log_max_size }}"
 nomad_binary: /usr/local/bin/nomad
 
 nomad_bind_addr: "{{ ansible_default_ipv4.address }}"

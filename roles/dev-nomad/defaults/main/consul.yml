@@ -6,10 +6,11 @@ consul_upgrade: false
 
 consul_etc_dir: /etc/consul.d
 consul_data_dir: /var/lib/consul
-consul_log_file: /var/log/consul/consul.log
+consul_log_file: /var/log/hashicorp/consul.log
 consul_run_dir: /run/consul
 
 consul_config_file: "{{ consul_etc_dir }}/consul.hcl"
+consul_log_max_size: '1M'
 consul_binary: /usr/local/bin/consul
 
 consul_datacenter: dc1

@@ -10,9 +10,12 @@ StartLimitInterval={{ nomad_restart_interval }}
 {% endif %}
 StartLimitBurst={{ nomad_restart_limit }}
 
+Wants=consul.service
+After=consul.service
+
 [Service]
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart={{ nomad_binary }} agent -config {{ nomad_etc_dir }}/
+ExecStart={{ nomad_binary }} agent -config {{ nomad_etc_dir }}
 KillMode=process
 KillSignal=SIGINT
 LimitNOFILE=infinity

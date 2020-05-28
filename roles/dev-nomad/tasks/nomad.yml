@@ -96,4 +96,56 @@
     port_min: "{{ nomad_task_port_min |default(0) |int }}"
     port_max: "{{ nomad_task_port_max |default(0) |int }}"
   tags: skip_ansible_lint
+
+- name: nomad logging
+  block:
+    - name: create nomad log directory
+      file:
+        state: directory
+        path: "{{ nomad_log_file |dirname }}"
+        ## keep user/group set by consul task
+        mode: 0775
+
+    - name: ensure nomad log file exists
+      copy:
+        dest: "{{ nomad_log_file }}"
+        content: ""
+        force: false
+        owner: syslog
+        group: adm
+        mode: 0664
+      notify: restart syslog service
+
+    - name: configure syslog for nomad
+      copy:
+        dest: /etc/rsyslog.d/34-nomad.conf
+        content: |
+          :programname,isequal,"nomad" {{ nomad_log_file }}
+          & stop
+        force: true
+      notify: restart syslog service
+
+    - name: rotate nomad log file
+      copy:
+        dest: /etc/logrotate.d/nomad
+        content: |
+          {{ nomad_log_file }} {
+              weekly
+              maxsize {{ nomad_log_max_size }}
+              missingok
+              rotate 4
+              notifempty
+              {{ commentout }}compress
+              {{ commentout }}delaycompress
+              sharedscripts
+              postrotate
+                  invoke-rc.d rsyslog rotate > /dev/null 2> /dev/null
+              endscript
+          }
+        force: true
+      vars:
+        commentout: "{{ '' if lin_compress_logs |bool or lin_compress_logs is none else '#' }}"
+
+  when: lin_use_rsyslog |bool
+  tags: dev_nomad_syslog
 ...

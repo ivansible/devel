@@ -11,7 +11,7 @@
   tags:
     - dev_nomad_all
 
-- name: restart hashicorp services
+- name: restart services
   meta: flush_handlers
   tags:
     - dev_consul_all
