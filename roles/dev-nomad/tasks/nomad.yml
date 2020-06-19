@@ -14,6 +14,7 @@
     remote_src: true
     src: "{{ _nomad_release.url }}"
     dest: "{{ nomad_binary |dirname }}"
+  notify: restart nomad service
   when: _nomad_release is changed
   ## fix intermittent network failures
   register: _nomad_download
