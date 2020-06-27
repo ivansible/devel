@@ -5,6 +5,8 @@
       - linux-headers-generic
       - linux-headers-{{ ansible_kernel }}
       - build-essential
+      ## install dmg2img for handling MacOSX images
+      - dmg2img
 
 - name: add virtualbox signing key
   apt_key:
