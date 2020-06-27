@@ -22,6 +22,7 @@ lindev_packages:
   - dnsutils
   - curl
   - wget
+  - lftp
   - netcat
   - rsync
   - iperf
