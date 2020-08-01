@@ -42,5 +42,10 @@ server = false
 {% endif %}
 
 ui = true
-enable_script_checks = true
+{# Warning: script_checks is insecure
+ # https://www.consul.io/docs/internals/security.html#known-insecure-configurations
+ # https://www.consul.io/docs/agent/options#_enable_local_script_checks
+ #}
+enable_script_checks = false
+enable_local_script_checks = true
 disable_update_check = true
