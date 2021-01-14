@@ -1,22 +1,22 @@
 ---
-# defaults for ivansible.lin_devel
+## defaults for ivansible.lin_devel
 
 lindev_pid_in_core: true
 
 
 ngrok_zip_url: latest
-# by default proxy is controlled by target environment
+## by default proxy is controlled by target environment
 ngrok_zip_proxy: ""
 
 lindev_upgrade_pup: false
 
 
 lindev_packages:
-  # archivers
+  ## archivers
   - gzip
   - unzip
   - unrar
-  # network
+  ## network
   - iputils-ping
   - traceroute
   - dnsutils
@@ -26,26 +26,26 @@ lindev_packages:
   - netcat
   - rsync
   - iperf
-  # development
+  ## development
   - build-essential
   - strace
   - git
-  # utilities
+  ## utilities
   - vim
   - nano
   - jq
   - tmux
   - shellcheck
-  # for /usr/bin/xpath
+  ## for /usr/bin/xpath
   - libxml-xpath-perl
-  # monitoring
+  ## monitoring
   - nethogs
   - iotop
-  # for top
+  ## for top
   - procps
-  # htop is similar to top and allows to scroll
+  ## htop is similar to top and allows to scroll
   - htop
-  # virtualization
+  ## virtualization
   - virt-what
   - cpu-checker
 ...

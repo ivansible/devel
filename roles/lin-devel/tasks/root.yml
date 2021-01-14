@@ -1,7 +1,14 @@
 ---
 - name: install common development packages
-  apt:
-    name: "{{ lindev_packages }}"
+  block:
+    - name: install common development packages (rescue if it fails)
+      apt:
+        name: "{{ lindev_packages }}"
+  rescue:
+    - name: install common development packages (update caches)
+      apt:
+        name: "{{ lindev_packages }}"
+        update_cache: true
   tags: lindev_packages
 
 - name: install ngrok
