@@ -3,5 +3,5 @@
   import_tasks: root.yml
   become: true
   when: lin_go_version |default('')
-  tags: role_all
+  tags: lin_go_all
 ...

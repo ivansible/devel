@@ -1,7 +1,6 @@
 # ivansible.lin_go
 
-[![Github Test Status](https://github.com/ivansible/lin-go/workflows/Molecule%20test/badge.svg?branch=master)](https://github.com/ivansible/lin-go/actions)
-[![Travis Test Status](https://travis-ci.org/ivansible/lin-go.svg?branch=master)](https://travis-ci.org/ivansible/lin-go)
+[![Github Test Status](https://github.com/ivansible/lin-go/workflows/test/badge.svg?branch=master)](https://github.com/ivansible/lin-go/actions)
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-ivansible.lin__go-68a.svg?style=flat)](https://galaxy.ansible.com/ivansible/lin_go/)
 
 This role installs Go-lang toolchain on linux.
@@ -43,4 +42,4 @@ MIT
 
 ## Author Information
 
-Created in 2020 by [IvanSible](https://github.com/ivansible)
+Created in 2020-2021 by [IvanSible](https://github.com/ivansible)

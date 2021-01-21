@@ -2,6 +2,10 @@
 - name: verify
   hosts: all
   tasks:
+    - name: vars
+      include_vars: vars.yml
+      tags: always
+
     - name: check go version on host
       command: go version
       when: ansible_connection != 'docker'
