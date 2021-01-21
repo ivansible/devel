@@ -1,7 +1,6 @@
 # ivansible.lin_devel
 
-[![Github Test Status](https://github.com/ivansible/lin-devel/workflows/Molecule%20test/badge.svg?branch=master)](https://github.com/ivansible/lin-devel/actions)
-[![Travis Test Status](https://travis-ci.org/ivansible/lin-devel.svg?branch=master)](https://travis-ci.org/ivansible/lin-devel)
+[![Github Test Status](https://github.com/ivansible/lin-devel/workflows/test/badge.svg?branch=master)](https://github.com/ivansible/lin-devel/actions)
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-ivansible.lin__devel-68a.svg?style=flat)](https://galaxy.ansible.com/ivansible/lin_devel/)
 
 This role configures remote host for development.
@@ -70,4 +69,4 @@ MIT
 
 ## Author Information
 
-Created in 2019-2020 by [IvanSible](https://github.com/ivansible)
+Created in 2019-2021 by [IvanSible](https://github.com/ivansible)

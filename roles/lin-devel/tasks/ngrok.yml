@@ -4,24 +4,24 @@
     _ngrok_proxy_env: {}
 
 - name: use ngrok proxy from inventory, if any
-  # see example of conditional step environment syntax here:
-  # https://docs.ansible.com/ansible/latest/modules/uri_module.html#examples
-  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
+  ## see example of conditional step environment syntax here:
+  ## https://docs.ansible.com/ansible/latest/modules/uri_module.html#examples
+  ## https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
   set_fact:
     _ngrok_proxy_env:
       http_proxy: "{{ ngrok_zip_proxy }}"
       https_proxy: "{{ ngrok_zip_proxy }}"
   no_log: "{{ hide_secrets |bool }}"
-  when: ngrok_zip_proxy |default('',true) != '' # noqa 602
+  when: ngrok_zip_proxy |d('')
 
 - name: detect ngrok download location
   uri:
     url: https://ngrok.com/download
     return_content: true
     creates: /usr/local/bin/ngrok
-  #connection: local  # never use delegation with "creates"
+  # connection: local  # never use delegation with "creates"
   register: ngrok_download_html
-  # ngrok.com is frequently inaccessble from .ru without proxy
+  ## ngrok.com is frequently inaccessble from .ru without proxy
   until: ngrok_download_html is successful
   environment: "{{ _ngrok_proxy_env }}"
   when: ngrok_zip_url == 'latest'
