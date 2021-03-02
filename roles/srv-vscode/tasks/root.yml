@@ -1,5 +1,63 @@
 ---
-- name: root task1
-  debug:
-    msg: task1
+- name: detect latest vscode server release
+  github_release:
+    repository: cdr/code-server
+    release: "{{ srv_vscode_version }}"
+    template: '{download_url}/code-server_{ver}_amd64.deb'
+    strip_v: true
+    version_script: 'dpkg-query --show code-server'
+    script_regex: '[0-9]+[.][0-9._-]+'
+    reinstall: "{{ srv_vscode_upgrade |bool }}"
+  register: _srv_vscode_release
+
+- name: install vscode server package
+  apt:
+    deb: "{{ _srv_vscode_release.url }}"
+    only_upgrade: "{{ not srv_vscode_upgrade |bool }}"
+  register: _srv_vscode_package
+  failed_when:
+    - _srv_vscode_package.failed
+    - _srv_vscode_package.msg is not search('later version is already installed')
+  when: _srv_vscode_release is changed
+
+- name: create directory for vscode server config
+  file:
+    state: directory
+    path: "{{ srv_vscode_config_file |dirname }}"
+    owner: "{{ srv_vscode_user }}"
+    mode: 0750
+
+- name: create config file for vscode server
+  template:
+    src: config.yaml
+    dest: "{{ srv_vscode_config_file }}"
+    owner: "{{ srv_vscode_user }}"
+    mode: 0640
+  register: _srv_vscode_config
+
+- name: start vscode server service
+  systemd:
+    name: "code-server@{{ srv_vscode_user }}"
+    state: "{{ (_srv_vscode_config is changed) |ternary('restarted', 'started') }}"
+    enabled: true
+  ## this step can fail in docker or break idempotence on github runners
+  when: not is_molecule_test
+
+- name: open vscode server port in ufw
+  ufw:
+    port: "{{ srv_vscode_port |string }}"
+    proto: tcp
+    rule: "{{ srv_vscode_direct |bool |ternary('allow','deny') }}"
+  no_log: "{{ hide_secrets |bool }}"
+  when: lin_firewall == 'ufw'
+
+- name: open vscode server port in ferm
+  ferm_port:
+    port: "{{ srv_vscode_port }}"
+    proto: tcp
+    zone: "{{ srv_vscode_direct |bool |ternary('external','internal') }}"
+    solo_zone: true
+    comment: code-server
+  tags: skip_ansible_lint
+  when: lin_firewall == 'ferm'
 ...

@@ -1,0 +1,9 @@
+bind-addr: 0.0.0.0:{{ srv_vscode_port }}
+{% if srv_vscode_password |d('',true) %}
+auth: password
+password: {{ srv_vscode_password }}
+{% else %}
+auth: none
+{% endif %}
+cert: {{ srv_vscode_ssl_cert }}
+cert-key: {{ srv_vscode_ssl_key }}

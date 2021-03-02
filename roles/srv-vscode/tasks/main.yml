@@ -1,6 +1,7 @@
 ---
-- name: become root and install role
+- name: become root and install vscode server
   import_tasks: root.yml
   become: true
-  tags: role_all
+  tags: srv_vscode_all
+  when: srv_vscode_enable |bool
 ...

@@ -1,3 +1,24 @@
 ---
 # defaults for ivansible.srv_vscode
+
+srv_vscode_enable: true
+srv_vscode_version: latest
+srv_vscode_upgrade: false
+
+srv_vscode_user: "{{ ansible_user_id }}"
+srv_vscode_config_file: "{{ ansible_user_dir }}/.config/code-server/config.yaml"
+srv_vscode_password: ~
+
+srv_vscode_port: 9443
+srv_vscode_direct: false
+
+srv_vscode_letsencrypt_cert: ~
+srv_vscode_ssl_cert:
+  "{{ '%s/%s/fullchain.pem' |format(certbot_live_dir, srv_vscode_letsencrypt_cert)
+      if srv_vscode_letsencrypt_cert else
+      nginx_ssl_cert }}"
+srv_vscode_ssl_key:
+  "{{ '%s/%s/privkey.pem' |format(certbot_live_dir, srv_vscode_letsencrypt_cert)
+      if srv_vscode_letsencrypt_cert else
+      nginx_ssl_key }}"
 ...
