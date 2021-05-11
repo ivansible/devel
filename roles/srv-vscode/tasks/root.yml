@@ -20,6 +20,14 @@
     - _srv_vscode_package.msg is not search('later version is already installed')
   when: _srv_vscode_release is changed
 
+- name: check that vscode tls certificate exists
+  file:
+    path: "{{ item }}"
+    state: file
+  loop:
+    - "{{ srv_vscode_ssl_cert }}"
+    - "{{ srv_vscode_ssl_key }}"
+
 - name: create directory for vscode server config
   file:
     state: directory
@@ -60,4 +68,25 @@
     comment: code-server
   tags: skip_ansible_lint
   when: lin_firewall == 'ferm'
+
+- name: directory for letsencrypt post-renewal hooks
+  file:
+    path: "{{ certbot_post_dir }}"
+    state: directory
+    mode: 0755
+  when: srv_vscode_ssl_cert is search('/letsencrypt/')
+
+- name: add letsencrypt post-renewal hook for vscode
+  copy:
+    dest: "{{ certbot_post_dir }}/vscode"
+    owner: root
+    group: root
+    mode: 0750
+    force: true
+    content: |
+      #!/bin/sh
+      # vscode certificate update hook
+      # ansible-managed
+      systemctl reload-or-restart code-server@{{ srv_vscode_user }}
+  when: srv_vscode_ssl_cert is search('/letsencrypt/')
 ...
