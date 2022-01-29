@@ -20,13 +20,20 @@
     - _srv_vscode_package.msg is not search('later version is already installed')
   when: _srv_vscode_release is changed
 
-- name: check that vscode tls certificate exists
+- name: install snakeoil tls certificate if needed
+  apt:
+    name: ssl-cert
+    state: present
+  when: srv_vscode_ssl_cert is search('snakeoil')
+
+- name: check that custom tls certificate for vscode exists
   file:
     path: "{{ item }}"
     state: file
   loop:
     - "{{ srv_vscode_ssl_cert }}"
     - "{{ srv_vscode_ssl_key }}"
+  when: srv_vscode_ssl_cert is not search('snakeoil')
 
 - name: create directory for vscode server config
   file:
