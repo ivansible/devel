@@ -3,7 +3,7 @@
   github_release:
     repository: cdr/code-server
     release: "{{ srv_vscode_version }}"
-    template: '{download_url}/code-server_{ver}_amd64.deb'
+    template: '{download_url}/code-server_{ver}_{goarch}.deb'
     strip_v: true
     version_script: 'dpkg-query --show code-server'
     script_regex: '[0-9]+[.][0-9._-]+'
