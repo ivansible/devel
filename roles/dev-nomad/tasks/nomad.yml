@@ -4,7 +4,7 @@
     repository: hashicorp/nomad
     release: "{{ nomad_version }}"
     strip_v: true
-    template: https://releases.hashicorp.com/nomad/{ver}/nomad_{ver}_linux_amd64.zip
+    template: https://releases.hashicorp.com/nomad/{ver}/nomad_{ver}_linux_{goarch}.zip
     creates: "{{ nomad_binary }}"
     reinstall: "{{ nomad_upgrade |bool }}"
   register: _nomad_release
