@@ -62,6 +62,7 @@
   template:
     src: nomad/nomad.service
     dest: /etc/systemd/system/nomad.service
+    mode: 0644
   register: _nomad_service_result
   notify: restart nomad service
 
@@ -128,6 +129,7 @@
           :programname,isequal,"nomad" {{ nomad_log_file }}
           & stop
         force: true
+        mode: 0644
       notify: restart syslog service
 
     - name: rotate nomad log file
@@ -148,6 +150,7 @@
               endscript
           }
         force: true
+        mode: 0644
       vars:
         commentout: "{{ '' if lin_compress_logs |bool or lin_compress_logs is none else '#' }}"
 
