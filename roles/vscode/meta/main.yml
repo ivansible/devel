@@ -1,8 +1,8 @@
 ---
 dependencies:
-  - ivansible.lin_base    # for common settings and modules
-  - ivansible.cert_base   # for certbot_live_dir
-  - ivansible.nginx_base  # for nginx_ssl_cert
+  - ivansible.base.linux  # for common settings and modules
+  - ivansible.base.cert   # for certbot_live_dir
+  - ivansible.base.nginx  # for nginx_ssl_cert
 
 galaxy_info:
   role_name: srv_vscode

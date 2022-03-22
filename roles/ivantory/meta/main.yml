@@ -1,9 +1,9 @@
 ---
 dependencies:
-  - ivansible.lin_base     # for hide_secrets, allow_sysctl, lin_apt_arch
-# - role: ivansible.dev_user
+  - ivansible.base.linux     # for hide_secrets, allow_sysctl, lin_apt_arch
+# - role: ivansible.devel.user
 #   dev_user_setup_system: true
-# - role: ivansible.dev_ansible
+# - role: ivansible.devel.ansible
 
 galaxy_info:
   role_name: dev_ivantory

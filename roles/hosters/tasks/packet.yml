@@ -7,7 +7,7 @@
 - block:
     - name: install golang for building Packet cli
       import_role:
-        name: ivansible.lin_go
+        name: ivansible.devel.go
         # exports lin_go_version
 
     - name: create temporary directory for building Packet cli

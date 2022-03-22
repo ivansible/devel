@@ -1,7 +1,7 @@
 ---
 - name: setup user for development
   include_role:
-    name: ivansible.dev_user
+    name: ivansible.devel.user
     apply:
       tags: divan_prepare_user
   vars:
@@ -16,7 +16,7 @@
 
 - name: install user-local ansible
   include_role:
-    name: ivansible.dev_ansible
+    name: ivansible.devel.ansible
     apply:
       tags: divan_prepare_user
   vars:
