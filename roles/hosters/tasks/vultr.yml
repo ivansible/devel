@@ -1,6 +1,6 @@
 ---
 - name: detect latest vultr cli release
-  github_release:
+  ivansible.base.github_release:
     repository: vultr/vultr-cli
     release: "{{ devhost_vultr_release }}"
     creates: "{{ devhost_vultr_binary }}"

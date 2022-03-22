@@ -1,6 +1,6 @@
 ---
 - name: detect latest git-sops release
-  github_release:
+  ivansible.base.github_release:
     repository: ivandeex/git-sops
     release: "{{ divan_sops_version }}"
     template: '{download_url}/git-sops_v{ver}_linux-{goarch}'

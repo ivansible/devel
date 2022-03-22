@@ -1,6 +1,6 @@
 ---
 - name: detect latest terraform release
-  github_release:
+  ivansible.base.github_release:
     repository: hashicorp/terraform
     release: "{{ terraform_version }}"
     strip_v: true

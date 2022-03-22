@@ -1,6 +1,6 @@
 ---
 - name: detect latest vscode server release
-  github_release:
+  ivansible.base.github_release:
     repository: cdr/code-server
     release: "{{ srv_vscode_version }}"
     template: '{download_url}/code-server_{ver}_{goarch}.deb'
@@ -67,7 +67,7 @@
   when: lin_firewall == 'ufw'
 
 - name: open vscode server port in ferm
-  ferm_port:
+  ivansible.base.ferm_port:
     port: "{{ srv_vscode_port }}"
     proto: tcp
     zone: "{{ srv_vscode_direct |bool |ternary('external','internal') }}"

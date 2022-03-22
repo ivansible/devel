@@ -91,7 +91,7 @@
       when: lin_firewall == 'ufw'
 
     - name: open nginx ports in ferm
-      ferm_port:
+      ivansible.base.ferm_port:
         port: 80
         proto: tcp
         # comment as nginx rather than jupyter for idempotence
@@ -112,7 +112,7 @@
   when: lin_firewall == 'ufw'
 
 - name: open/close network port for direct access in ferm
-  ferm_port:
+  ivansible.base.ferm_port:
     port: "{{ jupyter_port }}"
     proto: tcp
     zone: external

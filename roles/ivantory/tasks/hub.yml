@@ -1,6 +1,6 @@
 ---
 - name: detect latest github cli release
-  github_release:
+  ivansible.base.github_release:
     repository: github/hub
     release: "{{ git_hub_release }}"
     strip_v: true

@@ -1,6 +1,6 @@
 ---
 - name: detect latest pup release
-  github_release:
+  ivansible.base.github_release:
     repository: ericchiang/pup
     release: latest
     creates: /usr/local/bin/pup

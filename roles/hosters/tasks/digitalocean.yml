@@ -1,6 +1,6 @@
 ---
 - name: detect latest do-ctl release
-  github_release:
+  ivansible.base.github_release:
     repository: digitalocean/doctl
     release: "{{ devhost_doctl_release }}"
     creates: "{{ devhost_doctl_binary }}"

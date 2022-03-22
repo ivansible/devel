@@ -18,7 +18,7 @@
       notify: remove packet-cli build directory
 
     - name: build Packet cli from source
-      go:
+      ivansible.base.go:
         name: github.com/ebsarr/packet
         go_path: "{{ packet_build_dir.path }}"
       tags: skip_ansible_lint

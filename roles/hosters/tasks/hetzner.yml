@@ -1,6 +1,6 @@
 ---
 - name: detect latest hetzner-cloud cli release
-  github_release:
+  ivansible.base.github_release:
     repository: hetznercloud/cli
     release: "{{ devhost_hcloud_release }}"
     creates: "{{ devhost_hcloud_binary }}"

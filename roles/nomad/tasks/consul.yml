@@ -75,7 +75,7 @@
     daemon_reload: "{{ _consul_service_result is changed }}"
 
 - name: open consul ports in ferm
-  ferm_port:
+  ivansible.base.ferm_port:
     port:
       ## https://www.consul.io/docs/install/ports
       - "{{ consul_port_server }}/tcp"

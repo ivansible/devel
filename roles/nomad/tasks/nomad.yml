@@ -1,6 +1,6 @@
 ---
 - name: detect latest nomad release
-  github_release:
+  ivansible.base.github_release:
     repository: hashicorp/nomad
     release: "{{ nomad_version }}"
     strip_v: true
@@ -75,7 +75,7 @@
 
 - name: open nomad ports in ferm
   ## https://nomadproject.io/docs/install/production/requirements/#ports-used
-  ferm_port:
+  ivansible.base.ferm_port:
     port:
       - 4646/tcp     # HTTP API
       - 4647/tcp     # RPC
@@ -88,7 +88,7 @@
     - dev_nomad_firewall
 
 - name: ferm ports for nomad tasks
-  ferm_port:
+  ivansible.base.ferm_port:
     port: "{{ port_min }}-{{ port_max }}"
     zone: internal
     comment: nomad tasks

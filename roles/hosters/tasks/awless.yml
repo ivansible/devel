@@ -1,6 +1,6 @@
 ---
 - name: detect latest awless release
-  github_release:
+  ivansible.base.github_release:
     repository: wallix/awless
     release: "{{ devhost_awless_release }}"
     creates: "{{ devhost_awless_binary }}"

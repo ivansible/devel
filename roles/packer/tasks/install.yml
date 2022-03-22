@@ -1,6 +1,6 @@
 ---
 - name: detect latest packer release
-  github_release:
+  ivansible.base.github_release:
     repository: hashicorp/packer
     release: "{{ packer_version }}"
     strip_v: true
