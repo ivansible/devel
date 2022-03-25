@@ -10,6 +10,15 @@
   ## get_url always reports as changed in check mode
   when: not ansible_check_mode
 
+- name: tmux bashrc snippets
+  blockinfile:
+    path: ~/.local/bashrc/3common.sh
+    block: "{{ lookup('file', 'bashrc/tmux.sh') }}"
+    marker: "# == {mark} TMUX FUNCTIONS =="
+    insertafter: EOF
+    create: true
+    mode: 0644
+
 - name: customize tmux
   lineinfile:
     path: ~/.tmux.conf
