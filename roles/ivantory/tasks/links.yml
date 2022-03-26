@@ -8,8 +8,8 @@
 - name: create symbolic link for requirements
   file:
     state: link
-    src: "{{ divan_requirements_file |relpath(divan_requirements_link |dirname) }}"
-    dest: "{{ divan_requirements_link }}"
+    src: "{{ divan_packages_file |relpath(divan_packages_link |dirname) }}"
+    dest: "{{ divan_packages_link }}"
 
 - name: symbolic links for ivantory binaries
   file:

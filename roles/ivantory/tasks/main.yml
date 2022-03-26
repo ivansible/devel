@@ -80,11 +80,11 @@
     - divan_decrypt
     - divan_all
 
-- name: setup galaxy roles
-  import_tasks: galaxy.yml
+- name: install required collections and roles
+  import_tasks: collections.yml
   when: is_permitted |bool
   tags:
-    - divan_galaxy
+    - divan_collections
     - divan_all
 
 - name: set ssh for insecure developer login to vagrant boxes
