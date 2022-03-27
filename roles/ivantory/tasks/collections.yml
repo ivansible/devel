@@ -32,7 +32,7 @@
   vars:
     collections_subdir: "{{ divan_dir }}/collections/ansible_collections"
     collections_parent: "{{ collections_subdir |dirname }}"
-    collections_relink: "{{ divan_collections_dir |realpath |relpath(collections_parent) }}"
+    collections_relink: "{{ divan_collections_dir |relpath(collections_parent) }}"
   tags: divan_links
 
 - name: create standalone directory for required roles
@@ -49,7 +49,7 @@
   vars:
     roles_subdir: "{{ divan_dir }}/roles"
     roles_parent: "{{ roles_subdir |dirname }}"
-    roles_relink: "{{ divan_roles_dir |realpath |relpath(roles_parent) }}"
+    roles_relink: "{{ divan_roles_dir |relpath(roles_parent) }}"
   tags: divan_links
 
 - name: install required collections from git
