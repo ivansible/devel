@@ -10,5 +10,5 @@
     - role: ivansible.lin_go
     # test fallback to global completions in the docker test
     - role: ivansible.dev_user
-      when: ansible_virtualization_type != 'docker'
+      when: ansible_connection != 'docker'
 ...
