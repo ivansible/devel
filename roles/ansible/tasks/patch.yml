@@ -28,9 +28,9 @@
   failed_when: false
 
 - name: patch molecule-docker to fix async issues with mitogen
-  # mitogen speeds up main plays greatly, but create/destroy plays from
-  # molecule-docker use async wait which get stuck with mitogen, so patch
-  # https://github.com/mitogen-hq/mitogen/issues/835#issuecomment-978127345
+  ## mitogen speeds up main plays greatly, but create/destroy plays from
+  ## molecule-docker use async wait which get stuck with mitogen, so patch
+  ## https://github.com/mitogen-hq/mitogen/issues/835#issuecomment-978127345
   patch:
     src: docker-mitogen.patch
     basedir: "{{ dev_ansible_dir }}/site-packages/molecule_docker"
@@ -38,7 +38,16 @@
     backup: true
   failed_when: false
 
-- name: patch ansible restconf (fix "JSON object must be str")
+- name: patch mitogen for bug with distro 1.7.0
+  ## https://github.com/mitogen-hq/mitogen/issues/906#issuecomment-1079173163
+  patch:
+    src: mitogen-distro.patch
+    basedir: "{{ dev_ansible_dir }}/site-packages/mitogen"
+    strip: 1
+    backup: true
+  failed_when: false
+
+- name: patch ansible restconf on xenial (fix "JSON object must be str")
   patch:
     src: ansible-restconf.patch
     dest: "{{ dev_ansible_dir }}/site-packages/ansible/plugins/httpapi/restconf.py"
