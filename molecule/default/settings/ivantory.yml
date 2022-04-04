@@ -17,16 +17,9 @@ all:
 
         divan_repo: https://github.com/ivansible/ivantory-test.git
         divan_dir: "{{ ansible_user_dir }}/test/ivantory"
+        divan_collections_dir: "{{ ansible_user_dir }}/test/ansible_collections"
         divan_roles_dir: "{{ ansible_user_dir }}/test/galaxy"
-        divan_roles_check_role: ivansible.lin_base
 
-        divan_cryptor_exe: bin/cryptor
-        divan_cryptor_configured_flag: ivacrypt.configured
-        divan_check_file: files/check-file
-        divan_check_phrase: "test passphrase"
-        divan_password: ""
-        divan_galaxy_token: ""
-
-        ## skip github cli task since module github_release needs custom collection
-        git_hub_release: ""
+        divan_sops_probe_file: files/check-file
+        divan_sops_probe_text: "test passphrase"
 ...
