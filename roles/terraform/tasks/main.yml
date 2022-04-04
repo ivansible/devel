@@ -10,6 +10,7 @@
       file:
         state: directory
         path: "{{ terraform_plugin_dir }}"
+        mode: 0755
 
     - name: install 3rd-party terraform plugins
       import_tasks: plugins.yml

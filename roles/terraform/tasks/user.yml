@@ -1,12 +1,12 @@
 ---
-# configure permitted users for terraform
+## configure permitted users for terraform
 
 - name: configure terraform aliases (optional)
   lineinfile:
     path: ~/.local/bashrc/4alias.sh
     line: "alias {{ item }}"
-  # skip this step if ivansible.dev_user wasn't installed
-  ignore_errors: true
+  ## skip this step if ivansible.dev_user wasn't installed
+  failed_when: false
   loop:
     - "tf='terraform'"
     - "tfup='terraform apply -auto-approve'"
@@ -22,7 +22,7 @@
         line: "complete -C {{ terraform_binary }} terraform"
       become: false
   rescue:
-    # fall back if ivansible.dev_user wasn't installed
+    ## fall back if ivansible.dev_user wasn't installed
     - name: system-global bash completion for terraform
       copy:
         dest: /etc/profile.d/completion_terraform.sh
@@ -32,6 +32,7 @@
           if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -n "${BASH_COMPLETION_VERSINFO-}" ]; then
               complete -C {{ terraform_binary }} terraform
           fi
+        mode: 0644
       become: true
   tags: dev_terraform_completion
 
@@ -41,7 +42,7 @@
     dest: "{{ terraform_plans_dir }}"
     repo: "{{ terraform_plans_repo }}"
     version: "{{ terraform_plans_branch }}"
-    # only clone, don't choke on pending modifications
+    ## just clone, don't choke on pending modifications
     update: false
     accept_hostkey: true
   when: terraform_plans_repo != '' and 'permitted' in group_names  # noqa 602
