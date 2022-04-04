@@ -20,6 +20,7 @@
   template:
     src: jupyter_notebook_config.py.j2
     dest: "{{ jupyter_root_dir }}/jupyter_notebook_config.py"
+    mode: 0644
   notify: restart jupyter
 
 - block:
@@ -27,6 +28,7 @@
       copy:
         content: "{{ jupyter_theme }}"
         dest: "{{ jupyter_root_dir }}/theme-marker.txt"
+        mode: 0644
       register: theme_marker
 
     - name: change jupyter theme
@@ -42,16 +44,19 @@
   file:
     path: "{{ jupyter_work_dir }}"
     state: directory
+    mode: 0755
 
 - name: create directory for service unit
   file:
     path: "{{ jupyter_service_unit | dirname }}"
     state: directory
+    mode: 0755
 
 - name: setup user service unit
   template:
     src: jupyter.service.j2
     dest: "{{ jupyter_service_unit }}"
+    mode: 0644
   notify: restart jupyter
 
 - name: start the system service
@@ -73,6 +78,7 @@
       template:
         src: nginx.conf.j2
         dest: /etc/nginx/sites-enabled/jupyter.conf
+        mode: 0644
       notify: restart nginx
 
     - name: start nginx service
@@ -132,7 +138,8 @@
     update: false
   loop: "{{ jupyter_git_repos }}"
 
-- debug:
+- name: report success
+  debug:
     msg: "See your Jupyter at http://{{ jupyter_nginx_hostname |default(fallback_hostname) }}/"
   vars:
     fallback_hostname: "{{ ansible_fqdn |default(inventory_hostname, true) }}:{{ jupyter_port }}"
