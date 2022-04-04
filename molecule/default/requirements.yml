@@ -1,0 +1,7 @@
+---
+collections:
+  - git+https://github.com/ivansible/base
+  - git+https://github.com/ivansible/linux
+  ## ivansible.nginx.nginx is implicitly "required" by ivansible.devel.vscode
+  - git+https://github.com/ivansible/nginx
+...

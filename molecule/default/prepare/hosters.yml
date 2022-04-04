@@ -1,0 +1,10 @@
+---
+- name: prepare
+  hosts: all
+  roles:
+    - ivansible.linux.core
+    ## test fallback to global completions in the docker test
+    - role: ivansible.devel.user
+      when: ansible_connection != 'docker'
+    - ivansible.devel.go
+...

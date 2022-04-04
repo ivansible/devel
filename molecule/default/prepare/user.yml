@@ -1,0 +1,7 @@
+---
+- name: prepare
+  hosts: all
+  roles:
+    - ivansible.linux.core
+    - ivansible.linux.ssh  # to have user ssh keys tested in docker
+...

@@ -1,0 +1,24 @@
+---
+all:
+  children:
+    molecule:
+      children:
+        docker_molecule:
+          vars:
+            ansible_user: ansible
+        local_molecule:
+      vars:
+        is_permitted: false
+        allow_sysctl: false
+        lin_use_ssh: false
+        lin_firewall: none
+        lin_core_time_sync: false
+        lin_core_system_locale: en_US.UTF-8
+
+        consul_server_role: true
+        nomad_server_role: true
+
+        ## static random encryption keys for idempotence
+        consul_encrypt_key: fz1mfHDfDDe4zAGwRy2ntVQ7GeTfY5qZvLEFxmnDcj4=
+        nomad_encrypt_key: l2w5xvGvo96rvrf8wu4a3g==
+...
