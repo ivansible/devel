@@ -46,7 +46,7 @@
   environment:
     _vagrant_cloud_token: "{{ vagrant_cloud_token }}"
   become: false
-  ignore_errors: true
+  failed_when: false
   when:
     - is_permitted |bool
     - vagrant_use_login |bool

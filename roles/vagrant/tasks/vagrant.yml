@@ -35,7 +35,8 @@
                        | regex_search('_[0-9.]+_')
                        | regex_replace('_') }}"
 
-- debug:
+- name: report package versions
+  debug:
     msg:
       - "latest vagrant .deb: {{ vagrant_package_url | basename }}"
       - "old vagrant version: {{ old_vagrant_ver | default('n/a', true) }}"
