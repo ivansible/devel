@@ -9,6 +9,7 @@
       file:
         state: directory
         path: "{{ packer_plugin_dir }}"
+        mode: 0755
 
     - name: install 3rd-party packer plugins
       import_tasks: plugins.yml
