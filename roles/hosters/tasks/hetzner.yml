@@ -6,7 +6,7 @@
     creates: "{{ devhost_hcloud_binary }}"
     reinstall: "{{ devhost_upgrade |bool }}"
     strip_v: false
-    template: '{download_url}/hcloud-linux-amd64.tar.gz'
+    template: '{download_url}/hcloud-linux-{goarch}.tar.gz'
   tags: skip_ansible_lint
   register: latest_hcloud_release
 
