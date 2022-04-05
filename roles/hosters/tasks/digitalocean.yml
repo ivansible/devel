@@ -6,7 +6,7 @@
     creates: "{{ devhost_doctl_binary }}"
     reinstall: "{{ devhost_upgrade |bool }}"
     strip_v: true
-    template: '{download_url}/doctl-{ver}-linux-amd64.tar.gz'
+    template: '{download_url}/doctl-{ver}-linux-{goarch}.tar.gz'
   tags: skip_ansible_lint
   register: latest_doctl_release
 
