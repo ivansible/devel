@@ -7,7 +7,6 @@
 - name: parse the requirements file
   set_fact:
     _divan_requirements: "{{ _divan_collections_file.content |b64decode |from_yaml }}"
-  when: not ansible_check_mode
 
 - name: configure galaxy token
   copy:
@@ -53,28 +52,28 @@
   tags: divan_links
 
 - name: install required collections from git
-  git:
-    dest: "{{ divan_collections_dir }}/{{ item.name |replace('.','/') }}"
-    repo: "{{ item.source }}"
-    version: "{{ item.version |d(divan_default_git_branch) }}"
-    update: false
-    accept_hostkey: true
-  when:
-    - item.type == 'git' or item.source is match('^git@')
+  include_tasks: _install_requirement.yml
+  args:
+    apply:
+      tags:
+        - divan_collections
+        - divan_all
+  vars:
+    parent: "{{ divan_collections_dir }}"
   loop: "{{ _divan_requirements.collections |d([]) }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.name |d(item.source) |d(item) }}"
 
 - name: install required roles from git
-  git:
-    dest: "{{ divan_roles_dir }}/{{ item.name |replace('.','/') }}"
-    repo: "{{ item.source }}"
-    version: "{{ item.version |d(divan_default_git_branch) }}"
-    update: false
-    accept_hostkey: true
-  when:
-    - item.type == 'git' or item.source is match('^git@')
+  include_tasks: _install_requirement.yml
+  args:
+    apply:
+      tags:
+        - divan_collections
+        - divan_all
+  vars:
+    parent: "{{ divan_roles_dir }}"
   loop: "{{ _divan_requirements.roles |d([]) }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.name |d(item.source) |d(item) }}"
 ...

@@ -1,0 +1,20 @@
+---
+- name: install required collections from git
+  git:
+    dest: "{{ parent }}/{{ dir }}"
+    repo: "{{ repo }}"
+    version: "{{ version }}"
+    update: false
+    accept_hostkey: true
+  when:
+    - is_git |bool or type == 'git'
+  vars:
+    name: "{{ item.name |d('') |replace('.','/') }}"
+    source: "{{ item.source |d(item.name) |d(item) }}"
+    is_git: "{{ source is match('^git@|^git[+]https://') }}"
+    repo: "{{ source |regex_replace('^git[+]https://','https://') }}"
+    url_path: "{{ repo |regex_replace('^git@([^:/]+)[:/]','https://\\1/') |urlsplit('path') }}"
+    dir: "{{ name or url_path.strip('/') }}"
+    type: "{{ item.type |d('') }}"
+    version: "{{ item.version |d(divan_default_git_branch) }}"
+...
