@@ -40,20 +40,6 @@
     backup: true
   failed_when: false
 
-- name: patch ansible restconf on xenial (fix "JSON object must be str")
-  patch:
-    src: ansible-restconf.patch
-    dest: "{{ dev_ansible_dir }}/site-packages/ansible/plugins/httpapi/restconf.py"
-    backup: true
-  failed_when: false
-  ## the issue manifests itself as error "JSON object must be str"
-  ## in the custom restconf_config2 module used by ndm- keenetic roles
-  ## because in python 3.5 on xenial json.loads() accepts only type 'str';
-  ## in python 3.6 on bionic json.loads() accepts and converts 'bytes'
-  ## and the problem is no more, so we skip the patch on bionic and later.
-  ## python 2.7 also has this bug but is not used by ansible.
-  when: ansible_lsb.codename == 'xenial'
-
 - name: patch mitogen (fix "pending work still existed after shutdown")
   patch:
     src: mitogen-shutdown.patch
