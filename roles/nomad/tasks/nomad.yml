@@ -34,6 +34,7 @@
 - name: generate nomad encryption key
   block:
     - name: run nomad keygen
+      # noqa no-changed-when
       command: "{{ nomad_binary }} operator keygen"
       register: _nomad_keygen_result
 

@@ -40,6 +40,7 @@
 - name: generate consul encryption key
   block:
     - name: run consul keygen
+      # noqa no-changed-when
       command: "{{ consul_binary }} keygen"
       register: _consul_keygen_result
 
