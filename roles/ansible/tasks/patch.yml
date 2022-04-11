@@ -20,13 +20,6 @@
     site_packages: "{{ detect_site_packages_result.stdout_lines |first }}"
     venv_dir: "{{ dev_ansible_dir |expanduser }}"
 
-- name: patch molecule to get scenario from MOLECULE_TARGET
-  patch:
-    src: molecule-target.patch
-    dest: "{{ dev_ansible_dir }}/site-packages/molecule/command/base.py"
-    backup: true
-  failed_when: false
-
 - name: patch molecule-docker to fix async issues with mitogen
   ## mitogen speeds up main plays greatly, but create/destroy plays from
   ## molecule-docker use async wait which get stuck with mitogen, so patch
