@@ -5,12 +5,12 @@
     - name: check go version in docker
       ## options '-i -l' force interactive login shell
       command: bash -i -l -c 'go version'
-      when: ansible_connection == 'docker'
+      when: ansible_connection is search('docker')
       register: go_ver_docker
 
     - name: check go version on host
       command: go version
-      when: ansible_connection != 'docker'
+      when: ansible_connection is not search('docker')
       register: go_ver_host
 
     - name: assert go version is expected

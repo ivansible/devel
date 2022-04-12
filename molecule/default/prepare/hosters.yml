@@ -5,6 +5,6 @@
     - ivansible.linux.core
     ## test fallback to global completions in the docker test
     - role: ivansible.devel.user
-      when: ansible_connection != 'docker'
+      when: ansible_connection is not search('docker')
     - ivansible.devel.go
 ...
