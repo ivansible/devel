@@ -40,7 +40,15 @@
     backup: true
   failed_when: false
 
-- name: patch mitogen (fix "pending work still existed after shutdown")
+- name: patch ansible-mitogen to wrap community.docker.docker connections
+  patch:
+    src: mitogen-docker.patch
+    basedir: "{{ dev_ansible_dir }}/site-packages/ansible_mitogen"
+    strip: 1
+    backup: true
+  failed_when: false
+
+- name: patch mitogen to fix pending work still existed after shutdown
   patch:
     src: mitogen-shutdown.patch
     dest: "{{ dev_ansible_dir }}/site-packages/mitogen/core.py"
