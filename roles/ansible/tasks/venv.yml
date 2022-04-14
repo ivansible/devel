@@ -2,7 +2,7 @@
 ## setup virtual environment for ansible
 
 - name: create virtual environment
-  command:
+  ansible.builtin.command:
     argv:
       - "{{ dev_ansible_python }}"
       - -m
@@ -12,7 +12,7 @@
   register: _dev_ansible_venv_create
 
 - name: fix setuptools version on xenial, prevent syntax error
-  pip:
+  ansible.builtin.pip:
     name:
       - pip==20.3.3         # pip 21 will deprecate python 3.5
       - setuptools==50.3.2  # setuptools 51.3.x triggers syntax error
@@ -22,7 +22,7 @@
   when: ansible_lsb.codename == 'xenial'
 
 - name: upgrade to latest setuptools on bionic+
-  pip:
+  ansible.builtin.pip:
     name: pip,setuptools,wheel
     state: "{{ needs_update |ternary('latest', 'present') }}"
     virtualenv: "{{ dev_ansible_dir }}"
@@ -33,7 +33,7 @@
     on_xenial: "{{ ansible_lsb.codename == 'xenial' }}"
 
 - name: setup virtual environment
-  pip:
+  ansible.builtin.pip:
     requirements: "{{ dev_ansible_package_list }}"
     virtualenv: "{{ dev_ansible_dir }}"
     virtualenv_python: "{{ dev_ansible_python }}"

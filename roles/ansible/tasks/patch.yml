@@ -2,7 +2,7 @@
 ## apply patches to ansible, mitogen and molecule
 
 - name: detect site-packages directory
-  shell:
+  ansible.builtin.shell:
     cmd: |
       from __future__ import print_function
       import sys
@@ -12,7 +12,7 @@
   register: detect_site_packages_result
 
 - name: create symbolic link for site-packages
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ site_packages |relpath(venv_dir) }}"
     dest: "{{ venv_dir }}/site-packages"
@@ -24,7 +24,7 @@
   ## mitogen speeds up main plays greatly, but create/destroy plays from
   ## molecule-docker use async wait which get stuck with mitogen, so patch
   ## https://github.com/mitogen-hq/mitogen/issues/835#issuecomment-978127345
-  patch:
+  ansible.posix.patch:
     src: docker-mitogen.patch
     basedir: "{{ dev_ansible_dir }}/site-packages/molecule_docker"
     strip: 1
@@ -33,7 +33,7 @@
 
 - name: patch mitogen for bug with distro 1.7.0
   ## https://github.com/mitogen-hq/mitogen/issues/906#issuecomment-1079173163
-  patch:
+  ansible.posix.patch:
     src: mitogen-distro.patch
     basedir: "{{ dev_ansible_dir }}/site-packages/mitogen"
     strip: 1
@@ -41,7 +41,7 @@
   failed_when: false
 
 - name: patch ansible-mitogen to wrap community.docker.docker connections
-  patch:
+  ansible.posix.patch:
     src: mitogen-docker.patch
     basedir: "{{ dev_ansible_dir }}/site-packages/ansible_mitogen"
     strip: 1
@@ -49,7 +49,7 @@
   failed_when: false
 
 - name: patch mitogen to fix pending work still existed after shutdown
-  patch:
+  ansible.posix.patch:
     src: mitogen-shutdown.patch
     dest: "{{ dev_ansible_dir }}/site-packages/mitogen/core.py"
     backup: true

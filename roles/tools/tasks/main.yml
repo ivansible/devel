@@ -1,6 +1,6 @@
 ---
 - name: become root and install role
-  import_tasks: root.yml
+  ansible.builtin.import_tasks: root.yml
   become: true
   tags: lindev_all
 ...

@@ -11,7 +11,7 @@
   register: _divan_sops_release
 
 - name: install git-sops binary
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ _divan_sops_release.url }}"
     dest: "{{ divan_sops_binary }}"
     owner: root
@@ -22,13 +22,13 @@
   when: _divan_sops_release is changed
 
 - name: ensure directory for sops config
-  file:
+  ansible.builtin.file:
     path: ~/.config/sops/age
     state: directory
     mode: 0750
 
 - name: configure age keys
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.config/sops/age/keys.txt
     create: true
     mode: 0640
@@ -39,7 +39,7 @@
     marker: "# == {mark} IVANTORY"
 
 - name: check whether repository is already decrypted
-  git_config:
+  community.general.git_config:
     repo: "{{ divan_dir }}"
     scope: local
     name: sops.configured
@@ -48,7 +48,7 @@
 
 - name: decrypt repository
   when: _divan_decrypted_result.config_value != 'true' or divan_sops_upgrade |bool
-  command: "{{ divan_sops_binary }} setup --force"
+  ansible.builtin.command: "{{ divan_sops_binary }} setup --force"
   args:
     chdir: "{{ divan_dir }}"
   environment:

@@ -1,6 +1,6 @@
 ---
 - name: become root and deploy virtualbox
-  import_tasks: root.yml
+  ansible.builtin.import_tasks: root.yml
   become: true
   tags: lin_virtualbox_all
 ...

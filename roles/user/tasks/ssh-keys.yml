@@ -1,6 +1,6 @@
 ---
 - name: install new private ssh keys
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: ~/.ssh/
     mode: 0600
@@ -9,7 +9,7 @@
     label: "{{ item |basename }}"
 
 - name: remove obsolete private ssh keys
-  file:
+  ansible.builtin.file:
     path: ~/.ssh/{{ item |basename }}
     state: absent
   loop: "{{ dev_user_ssh_keys_revoke }}"
@@ -17,7 +17,7 @@
     label: "{{ item |basename }}"
 
 - name: configure keys for git repositories
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.ssh/config
     create: true
     mode: 0600

@@ -1,6 +1,6 @@
 ---
 - name: verify that user-local bash completions exist
-  stat:
+  ansible.builtin.stat:
     path: "{{ _devhost_user_bash_completions }}"
   register: _stat_user_bash_completions
   become: false
@@ -9,7 +9,7 @@
     - dev_hosters_all
 
 - name: become root and install hoster tools
-  import_tasks: root.yml
+  ansible.builtin.import_tasks: root.yml
   become: true
   tags:
     - devhost_all

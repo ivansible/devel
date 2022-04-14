@@ -1,14 +1,14 @@
 ---
 - block:
     - name: install aws cli (ok to fail, will rescue)
-      apt:
+      ansible.builtin.apt:
         name: awscli
         state: "{{ state }}"
         update_cache: "{{ devhost_upgrade |bool }}"
       no_log: "{{ hide_secrets |bool }}"
   rescue:
     - name: install aws cli (update apt cache)
-      apt:
+      ansible.builtin.apt:
         name: awscli
         state: "{{ state }}"
         update_cache: true
@@ -16,14 +16,14 @@
     state: "{{ devhost_upgrade |bool |ternary('latest','present') }}"
 
 - name: user-local bash completion for aws cli
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ _devhost_user_bash_completions }}"
     line: 'complete -C /usr/bin/aws_completer aws'
   become: false
   when: _stat_user_bash_completions.stat.exists
 
 - name: system-global bash completion for aws cli
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/completion_aws.sh
     content: |
       # bash completion for AWS CLI

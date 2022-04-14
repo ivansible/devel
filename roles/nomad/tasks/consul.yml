@@ -1,16 +1,16 @@
 ---
 - name: add consul group
-  group:
+  ansible.builtin.group:
     name: "{{ consul_group }}"
 
 - name: add consul user
-  user:
+  ansible.builtin.user:
     name: "{{ consul_user }}"
     group: "{{ consul_group }}"
     system: true
 
 - name: install consul binary
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_{{ lin_apt_arch }}.zip
     dest: "{{ consul_binary | dirname }}"
@@ -21,7 +21,7 @@
   notify: restart consul service
 
 - name: create consul directories
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ item.path }}"
     owner: "{{ consul_user }}"
@@ -41,18 +41,18 @@
   block:
     - name: run consul keygen
       # noqa no-changed-when
-      command: "{{ consul_binary }} keygen"
+      ansible.builtin.command: "{{ consul_binary }} keygen"
       register: _consul_keygen_result
 
     - name: set fact with consul encryption key
-      set_fact:
+      ansible.builtin.set_fact:
         consul_encrypt_key: "{{ _consul_keygen_result.stdout_lines.0 }}"
   when:
     - consul_encrypt_enable |bool
     - not consul_encrypt_key |default('')
 
 - name: configure consul
-  template:
+  ansible.builtin.template:
     src: consul/consul.hcl
     dest: "{{ consul_config_file }}"
     owner: "{{ consul_user }}"
@@ -61,7 +61,7 @@
   notify: restart consul service
 
 - name: create consul service
-  template:
+  ansible.builtin.template:
     src: consul/consul.service
     dest: /etc/systemd/system/consul.service
     mode: 0644
@@ -69,7 +69,7 @@
   notify: restart consul service
 
 - name: enable consul service
-  systemd:
+  ansible.builtin.systemd:
     name: consul
     state: started
     enabled: true
@@ -94,7 +94,7 @@
 - name: consul logging
   block:
     - name: create consul log directory
-      file:
+      ansible.builtin.file:
         state: directory
         path: "{{ consul_log_file |dirname }}"
         owner: syslog
@@ -102,7 +102,7 @@
         mode: 0775
 
     - name: ensure consul log file exists
-      copy:
+      ansible.builtin.copy:
         dest: "{{ consul_log_file }}"
         content: ""
         force: false
@@ -112,7 +112,7 @@
       notify: restart syslog service
 
     - name: configure syslog for consul
-      copy:
+      ansible.builtin.copy:
         dest: /etc/rsyslog.d/34-consul.conf
         content: |
           :programname,isequal,"consul" {{ consul_log_file }}
@@ -122,7 +122,7 @@
       notify: restart syslog service
 
     - name: rotate consul log file
-      copy:
+      ansible.builtin.copy:
         dest: /etc/logrotate.d/consul
         content: |
           {{ consul_log_file }} {

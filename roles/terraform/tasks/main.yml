@@ -2,22 +2,22 @@
 - name: dev_terraform role
   block:
     - name: install terraform binary
-      import_tasks: install.yml
+      ansible.builtin.import_tasks: install.yml
       become: true
       tags: dev_terraform_install
 
     - name: create directory for terraform plugins
-      file:
+      ansible.builtin.file:
         state: directory
         path: "{{ terraform_plugin_dir }}"
         mode: 0755
 
     - name: install 3rd-party terraform plugins
-      import_tasks: plugins.yml
+      ansible.builtin.import_tasks: plugins.yml
       tags: dev_terraform_plugins
 
     - name: configure permitted users for terraform
-      import_tasks: user.yml
+      ansible.builtin.import_tasks: user.yml
       when: is_permitted |bool
       tags: dev_terraform_user
   tags:

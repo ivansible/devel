@@ -10,17 +10,17 @@
   register: latest_hub_release
 
 - name: record github cli release
-  set_fact:
+  ansible.builtin.set_fact:
     git_hub_release: "{{ latest_hub_release.release }}"
 
 - name: create parent directory for github cli
-  file:
+  ansible.builtin.file:
     path: "{{ git_hub_dir |dirname }}"
     state: directory
     mode: 0755
 
 - name: download and unpack github cli archive
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_hub_release.url }}"
     dest: "{{ git_hub_dir |dirname }}"
@@ -28,21 +28,21 @@
   register: unpack_hub_archive
 
 - name: link to github cli binary
-  file:
+  ansible.builtin.file:
     src: "{{ git_hub_dir }}/bin/hub"
     dest: "{{ git_hub_binary }}"
     state: link
     force: true
 
 - name: directory for github cli man pages
-  file:
+  ansible.builtin.file:
     dest: "{{ git_hub_man_dir }}"
     state: directory
     mode: 0755
 
 - name: links for github cli man pages
   # noqa 306
-  shell: >
+  ansible.builtin.shell: >
     for page in *.1 ; do
       ln -sf \
         "{{ (git_hub_dir + '/share/man/man1')
@@ -55,7 +55,7 @@
         or git_hub_remake_links |bool
 
 - name: bash completion for github cli
-  file:
+  ansible.builtin.file:
     src: "{{ git_hub_dir }}/etc/hub.bash_completion.sh"
     dest: "{{ git_hub_completion_dir }}/hub"
     state: link

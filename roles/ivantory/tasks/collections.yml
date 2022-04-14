@@ -1,15 +1,15 @@
 ---
 - name: read list of required collections and roles
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ divan_collections_file }}"
   register: _divan_collections_file
 
 - name: parse the requirements file
-  set_fact:
+  ansible.builtin.set_fact:
     _divan_requirements: "{{ _divan_collections_file.content |b64decode |from_yaml }}"
 
 - name: configure galaxy token
-  copy:
+  ansible.builtin.copy:
     dest: "{{ ansible_user_dir }}/.ansible/galaxy_token"
     content: "token: {{ divan_galaxy_token }}\n"
     force: true
@@ -18,13 +18,13 @@
     - divan_galaxy_token |d('')
 
 - name: create standalone directory for collections
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ divan_collections_dir }}"
     mode: 0755
 
 - name: create symbolic link for collections in ivantory
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ collections_relink }}"
     dest: "{{ collections_subdir }}"
@@ -35,13 +35,13 @@
   tags: divan_links
 
 - name: create standalone directory for required roles
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ divan_roles_dir }}"
     mode: 0755
 
 - name: create symbolic link for required roles in ivantory
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ roles_relink }}"
     dest: "{{ roles_subdir }}"
@@ -52,7 +52,7 @@
   tags: divan_links
 
 - name: install required collections from git
-  include_tasks: _install_requirement.yml
+  ansible.builtin.include_tasks: _install_requirement.yml
   args:
     apply:
       tags:
@@ -65,7 +65,7 @@
     label: "{{ item.name |d(item.source) |d(item) }}"
 
 - name: install required roles from git
-  include_tasks: _install_requirement.yml
+  ansible.builtin.include_tasks: _install_requirement.yml
   args:
     apply:
       tags:

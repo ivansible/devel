@@ -1,16 +1,16 @@
 ---
 - name: add heroku signing key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://cli-assets.heroku.com/apt/release.key
 
 - name: add heroku repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: 'deb https://cli-assets.heroku.com/apt ./'
     filename: heroku
     mode: 0644
 
 - name: install heroku toolbeit
-  apt:
+  ansible.builtin.apt:
     name: heroku
     state: "{{ devhost_upgrade |bool |ternary('latest','present') }}"
 ...

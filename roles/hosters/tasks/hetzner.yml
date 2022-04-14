@@ -11,7 +11,7 @@
   register: latest_hcloud_release
 
 - name: download and unpack hetzner-cloud cli
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_hcloud_release.url }}"
     dest: "{{ devhost_hcloud_binary |dirname }}"
@@ -22,14 +22,14 @@
   when: latest_hcloud_release is changed
 
 - name: user-local bash completion for hcloud
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ _devhost_user_bash_completions }}"
     line: "source <(hcloud completion bash)"
   become: false
   when: _stat_user_bash_completions.stat.exists
 
 - name: system-global bash completion for hcloud cli
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/completion_hcloud.sh
     content: |
       # bash completion for Hetzner-Cloud CLI

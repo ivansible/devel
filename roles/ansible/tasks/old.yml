@@ -2,12 +2,12 @@
 ## workaround for old ansible pre-installed on vagrant
 
 - name: check installed ansible version (ok to fail)
-  command: "{{ dev_ansible_dir }}/bin/ansible --version"
+  ansible.builtin.command: "{{ dev_ansible_dir }}/bin/ansible --version"
   changed_when: false
   register: ansible_version_result
 
 - name: upgrade virtual environment if it has old ansible 2.8
-  pip:
+  ansible.builtin.pip:
     state: latest
     requirements: "{{ dev_ansible_package_list }}"
     virtualenv: "{{ dev_ansible_dir }}"

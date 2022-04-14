@@ -1,23 +1,23 @@
 ---
 - name: install system packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ jupyter_system_packages }}"
   become: true
 
 - name: install python packages
-  pip:
+  ansible.builtin.pip:
     virtualenv: "{{ jupyter_root_dir }}"
     virtualenv_python: python3
     name: "{{ jupyter_pip_stage1 | list }}"
 
 - name: install stage2 packages
-  pip:
+  ansible.builtin.pip:
     virtualenv: "{{ jupyter_root_dir }}"
     name: "{{ (jupyter_pip_stage2 | list)
             + (jupyter_pip_extras | list) }}"
 
 - name: configure notebook server
-  template:
+  ansible.builtin.template:
     src: jupyter_notebook_config.py.j2
     dest: "{{ jupyter_root_dir }}/jupyter_notebook_config.py"
     mode: 0644
@@ -25,7 +25,7 @@
 
 - block:
     - name: check current theme
-      copy:
+      ansible.builtin.copy:
         content: "{{ jupyter_theme }}"
         dest: "{{ jupyter_root_dir }}/theme-marker.txt"
         mode: 0644
@@ -33,7 +33,7 @@
 
     - name: change jupyter theme
       when: theme_marker is changed
-      command: ./bin/jt {{ jupyter_theme }}
+      ansible.builtin.command: ./bin/jt {{ jupyter_theme }}
       args:
         chdir: "{{ jupyter_root_dir }}"
       register: run_jt
@@ -41,26 +41,26 @@
   when: jupyter_theme != ''  # noqa 602
 
 - name: create work directory
-  file:
+  ansible.builtin.file:
     path: "{{ jupyter_work_dir }}"
     state: directory
     mode: 0755
 
 - name: create directory for service unit
-  file:
+  ansible.builtin.file:
     path: "{{ jupyter_service_unit | dirname }}"
     state: directory
     mode: 0755
 
 - name: setup user service unit
-  template:
+  ansible.builtin.template:
     src: jupyter.service.j2
     dest: "{{ jupyter_service_unit }}"
     mode: 0644
   notify: restart jupyter
 
 - name: start the system service
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ jupyter_service_name }}"
     user: true
     daemon_reload: true
@@ -71,25 +71,25 @@
   when: jupyter_nginx_hostname != ''  # noqa 602
   block:
     - name: install nginx
-      apt:
+      ansible.builtin.apt:
         name: nginx
 
     - name: create nginx config for jupyter
-      template:
+      ansible.builtin.template:
         src: nginx.conf.j2
         dest: /etc/nginx/sites-enabled/jupyter.conf
         mode: 0644
       notify: restart nginx
 
     - name: start nginx service
-      systemd:
+      ansible.builtin.systemd:
         name: nginx
         enabled: true
         state: started
 
 
     - name: open nginx ports in ufw
-      ufw:
+      community.general.ufw:
         rule: allow
         port: 80
         proto: tcp
@@ -108,7 +108,7 @@
 
 
 - name: open/close network port for direct access in ufw
-  ufw:
+  community.general.ufw:
     rule: allow
     port: "{{ jupyter_port |string }}"
     proto: tcp
@@ -130,7 +130,7 @@
 
 
 - name: checkout user git repository
-  git:
+  ansible.builtin.git:
     repo: "{{ item }}"
     version: master
     dest: "{{ jupyter_work_dir }}/{{ item |basename |regex_replace('\\.git$','') }}"
@@ -139,7 +139,7 @@
   loop: "{{ jupyter_git_repos }}"
 
 - name: report success
-  debug:
+  ansible.builtin.debug:
     msg: "See your Jupyter at http://{{ jupyter_nginx_hostname |default(fallback_hostname) }}/"
   vars:
     fallback_hostname: "{{ ansible_fqdn |default(inventory_hostname, true) }}:{{ jupyter_port }}"

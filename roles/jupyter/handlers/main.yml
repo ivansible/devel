@@ -1,12 +1,12 @@
 ---
 - name: restart jupyter
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ jupyter_service_name }}"
     user: true
     state: restarted
 
 - name: restart nginx
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     state: restarted
   become: true

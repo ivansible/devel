@@ -1,6 +1,6 @@
 ---
 - name: add golang ppa
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: ppa:longsleep/golang-backports
     filename: golang
     mode: 0644
@@ -9,11 +9,11 @@
   when: ansible_lsb.release is version('20.04','<')
 
 - name: install golang package
-  apt:
+  ansible.builtin.apt:
     name: golang-{{ lin_go_version }}
 
 - name: set global golang environment
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/profile.d/golang.sh
     block: |
         # shellcheck shell=sh

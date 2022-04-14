@@ -1,18 +1,18 @@
 ---
 - name: create symbolic link for virtualenv
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ divan_venv_dir |relpath(divan_dir) }}"
     dest: "{{ divan_venv_link }}"
 
 - name: create symbolic link for requirements
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ divan_packages_file |relpath(divan_packages_link |dirname) }}"
     dest: "{{ divan_packages_link }}"
 
 - name: symbolic links for ivantory binaries
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ divan_dir | relpath(dev_ansible_link_dir) }}/bin/{{ item }}"
     dest: "{{ dev_ansible_link_dir }}/ivantory-{{ item }}"

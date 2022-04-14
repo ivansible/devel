@@ -1,17 +1,17 @@
 ---
 - name: check that Packet cli binary already exists
-  stat:
+  ansible.builtin.stat:
     path: "{{ devhost_packet_binary }}"
   register: packet_binary
 
 - block:
     - name: install golang for building Packet cli
-      import_role:
+      ansible.builtin.import_role:
         name: ivansible.devel.go
         # exports lin_go_version
 
     - name: create temporary directory for building Packet cli
-      tempfile:
+      ansible.builtin.tempfile:
         prefix: build-packet-cli.
         state: directory
       register: packet_build_dir
@@ -31,7 +31,7 @@
       until: _build_packet_cli is successful
 
     - name: copy Packet cli in place
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ packet_build_dir.path }}/bin/packet"
         dest: "{{ devhost_packet_binary }}"
       delegate_to: "{{ inventory_hostname }}"
@@ -41,17 +41,17 @@
         or not packet_binary.stat.exists
 
 - name: cleanup temporary Packet files
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - block:
     - name: create directory for Packet cli profile
-      file:
+      ansible.builtin.file:
         path: "{{ ansible_user_dir }}/.packet"
         state: directory
         mode: 0755
 
     - name: create Packet cli profile
-      template:
+      ansible.builtin.template:
         src: packet-config.json.j2
         dest: "{{ ansible_user_dir }}/.packet/config"
         mode: 0640

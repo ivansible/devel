@@ -2,7 +2,7 @@
 ## convenient ansible aliases in users profile
 
 - name: add link directory on the path
-  blockinfile:
+  ansible.builtin.blockinfile:
     ## path file must correspond with role ivansible.dev_user
     ## https://github.com/ivansible/dev-user/blob/master/tasks/bashrc.yml
     path: ~/.local/bashrc/2path.sh
@@ -15,7 +15,7 @@
   when: dev_ansible_link_dir |d('')
 
 - name: alias for ansible-playbook
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.local/bashrc/4alias.sh
     line: "alias ap='ansible-playbook'"
 ...

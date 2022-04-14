@@ -1,6 +1,6 @@
 ---
 - name: become root and install vscode server
-  import_tasks: root.yml
+  ansible.builtin.import_tasks: root.yml
   become: true
   tags: srv_vscode_all
   when: srv_vscode_enable |bool

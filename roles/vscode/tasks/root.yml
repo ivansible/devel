@@ -11,7 +11,7 @@
   register: _srv_vscode_release
 
 - name: install vscode server package
-  apt:
+  ansible.builtin.apt:
     deb: "{{ _srv_vscode_release.url }}"
     only_upgrade: "{{ not srv_vscode_upgrade |bool }}"
   register: _srv_vscode_package
@@ -21,13 +21,13 @@
   when: _srv_vscode_release is changed
 
 - name: install snakeoil tls certificate if needed
-  apt:
+  ansible.builtin.apt:
     name: ssl-cert
     state: present
   when: srv_vscode_ssl_cert is search('snakeoil')
 
 - name: check that custom tls certificate for vscode exists
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: file
   loop:
@@ -36,14 +36,14 @@
   when: srv_vscode_ssl_cert is not search('snakeoil')
 
 - name: create directory for vscode server config
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ srv_vscode_config_file |dirname }}"
     owner: "{{ srv_vscode_user }}"
     mode: 0750
 
 - name: create config file for vscode server
-  template:
+  ansible.builtin.template:
     src: config.yaml
     dest: "{{ srv_vscode_config_file }}"
     owner: "{{ srv_vscode_user }}"
@@ -51,7 +51,7 @@
   register: _srv_vscode_config
 
 - name: start vscode server service
-  systemd:
+  ansible.builtin.systemd:
     name: "code-server@{{ srv_vscode_user }}"
     state: "{{ (_srv_vscode_config is changed) |ternary('restarted', 'started') }}"
     enabled: true
@@ -59,7 +59,7 @@
   when: not is_molecule_test
 
 - name: open vscode server port in ufw
-  ufw:
+  community.general.ufw:
     port: "{{ srv_vscode_port |string }}"
     proto: tcp
     rule: "{{ srv_vscode_direct |bool |ternary('allow','deny') }}"
@@ -77,14 +77,14 @@
   when: lin_firewall == 'ferm'
 
 - name: directory for letsencrypt post-renewal hooks
-  file:
+  ansible.builtin.file:
     path: "{{ certbot_post_dir }}"
     state: directory
     mode: 0755
   when: srv_vscode_ssl_cert is search('/letsencrypt/')
 
 - name: add letsencrypt post-renewal hook for vscode
-  copy:
+  ansible.builtin.copy:
     dest: "{{ certbot_post_dir }}/vscode"
     owner: root
     group: root

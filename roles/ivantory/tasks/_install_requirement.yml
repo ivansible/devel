@@ -1,6 +1,6 @@
 ---
 - name: install required collections from git
-  git:
+  ansible.builtin.git:
     dest: "{{ parent }}/{{ dir }}"
     repo: "{{ repo }}"
     version: "{{ version }}"

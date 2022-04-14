@@ -1,11 +1,11 @@
 ---
 - name: install beam, the solusvm client
-  pip:
+  ansible.builtin.pip:
     name: beam
     executable: pip3
 
 - name: configure solusvm vps machines for beam
-  template:
+  ansible.builtin.template:
     src: beam.ini.j2
     dest: ~/.beam.ini
     mode: 0640

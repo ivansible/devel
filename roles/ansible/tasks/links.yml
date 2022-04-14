@@ -2,19 +2,19 @@
 ## convenient links for user-local ansible binaries
 
 - name: expand home directory in parameters
-  set_fact:
+  ansible.builtin.set_fact:
     bin_dir: "{{ dev_ansible_dir |expanduser }}/bin"
     link_dir: "{{ dev_ansible_link_dir |expanduser }}"
 
 - name: directory for links to ansible binaries
-  file:
+  ansible.builtin.file:
     path: "{{ link_dir }}"
     state: directory
     mode: 0755
   register: link_dir_result
 
 - name: links for ansible-prefixed binaries
-  shell: >
+  ansible.builtin.shell: >
     for bin in ansible-* ; do
       ln -s -f \
         "{{ bin_dir | relpath(link_dir) }}/$bin" \
@@ -25,7 +25,7 @@
     creates: "{{ link_dir }}/ansible-playbook"
 
 - name: links for ansible flavored pip, python etc
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ bin_dir | relpath(link_dir) }}/{{ item.0 }}"
     dest: "{{ link_dir }}/{{ item.1 }}"

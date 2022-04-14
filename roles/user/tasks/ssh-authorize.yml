@@ -1,12 +1,12 @@
 ---
 - name: ensure .ssh directory exists
-  file:
+  ansible.builtin.file:
     path: ~/.ssh
     state: directory
     mode: 0700
 
 - name: authorize new public ssh keys
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ ansible_user_id }}"
     key: "{{ lookup('pipe', keygen_cmd) }}"
     comment: "{{ key_name }}"
@@ -26,7 +26,7 @@
   tags: dev_user_ssh_interactive
 
 - name: revoke obsolete public ssh keys
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ ansible_user_id }}"
     key: "{{ lookup('pipe', keygen_cmd) }}"
     state: absent
@@ -38,7 +38,7 @@
     label: "{{ key_name }}"
 
 - name: fallback to empty authorized keys file if no keys were provided
-  copy:
+  ansible.builtin.copy:
     dest: ~/.ssh/authorized_keys
     content: ""
     mode: 0600

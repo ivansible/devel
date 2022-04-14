@@ -1,6 +1,6 @@
 ---
 - name: install user utils (oath tool, pssh, etc)
-  apt:
+  ansible.builtin.apt:
     name: oathtool,pssh
   become: true
   tags:
@@ -8,13 +8,13 @@
     - dev_user_all
 
 - name: bashrc customizations
-  import_tasks: bashrc.yml
+  ansible.builtin.import_tasks: bashrc.yml
   tags:
     - dev_user_bashrc
     - dev_user_all
 
 - name: git config customizations
-  import_tasks: git-config.yml
+  ansible.builtin.import_tasks: git-config.yml
   when: is_permitted |bool
   tags:
     - dev_user_gitconfig
@@ -23,7 +23,7 @@
 
 
 - name: customize tmux
-  import_tasks: tmux.yml
+  ansible.builtin.import_tasks: tmux.yml
   tags:
     - dev_user_utils
     - dev_user_tmux
@@ -31,21 +31,21 @@
 
 
 - name: authorize public keys
-  import_tasks: ssh-authorize.yml
+  ansible.builtin.import_tasks: ssh-authorize.yml
   tags:
     - dev_user_ssh_all
     - dev_user_all
     - dev_user_ssh_keys
 
 - name: generate ssh config
-  import_tasks: ssh-config.yml
+  ansible.builtin.import_tasks: ssh-config.yml
   tags:
     - dev_user_ssh_all
     - dev_user_ssh_config
     - dev_user_all
 
 - name: install ssh keys
-  import_tasks: ssh-keys.yml
+  ansible.builtin.import_tasks: ssh-keys.yml
   tags:
     - dev_user_ssh_all
     - dev_user_ssh_keys
@@ -53,7 +53,7 @@
 
 
 - name: directory for user binaries
-  file:
+  ansible.builtin.file:
     path: ~/bin
     state: directory
     mode: 0755
@@ -63,7 +63,7 @@
 
 
 - name: install backup-restore scripts on target host
-  import_role:
+  ansible.builtin.import_role:
     name: ivansible.base.backup
     tasks_from: install_scripts.yml
   become: true

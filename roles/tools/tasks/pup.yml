@@ -11,7 +11,7 @@
   register: latest_pup_release
 
 - name: download and unpack pup
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_pup_release.url }}"
     dest: /usr/local/bin

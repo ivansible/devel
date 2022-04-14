@@ -2,13 +2,13 @@
 # handlers for ivansible.dev_hosters
 
 - name: remove packet-cli build directory
-  file:
+  ansible.builtin.file:
     path: "{{ packet_build_dir.path }}"
     state: absent
   become: true
 
 - name: remove packet-cli build cache
-  file:
+  ansible.builtin.file:
     path: ~/.cache/go-build
     state: absent
   become: true

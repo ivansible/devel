@@ -1,6 +1,6 @@
 ---
 - name: detect latest vagrant release
-  uri:
+  ansible.builtin.uri:
     url: https://www.vagrantup.com/downloads.html
     creates: "{{ upgrade |ternary(omit, '/usr/bin/vagrant') }}"
     return_content: true
@@ -11,7 +11,7 @@
   when: vagrant_package_url == 'latest'
 
 - name: extract latest vagrant package url
-  set_fact:
+  ansible.builtin.set_fact:
     vagrant_package_url: "{{ _vagrant_release.content
                            | regex_search('https://[^\"]+64\\.deb') }}"
   when:
@@ -19,13 +19,13 @@
     - _vagrant_release.content is defined
 
 - name: detect installed vagrant release
-  command: dpkg -s vagrant
+  ansible.builtin.command: dpkg -s vagrant
   changed_when: false
   failed_when: false
   register: dpkg_result
 
 - name: extract old and new vagrant version
-  set_fact:
+  ansible.builtin.set_fact:
     old_vagrant_ver: "{{ dpkg_result.stdout_lines
                        | select('match', '^Version')
                        | join('')
@@ -36,7 +36,7 @@
                        | regex_replace('_') }}"
 
 - name: report package versions
-  debug:
+  ansible.builtin.debug:
     msg:
       - "latest vagrant .deb: {{ vagrant_package_url | basename }}"
       - "old vagrant version: {{ old_vagrant_ver | default('n/a', true) }}"
@@ -48,7 +48,7 @@
     - old_vagrant_ver != new_vagrant_ver
 
 - name: install vagrant package from url
-  apt:
+  ansible.builtin.apt:
     deb: "{{ vagrant_package_url }}"
     only_upgrade: "{{ not vagrant_upgrade |bool }}"
   register: vagrant_deb_result

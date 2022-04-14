@@ -2,7 +2,7 @@
 # configure permitted users for packer
 
 - name: checkout packer templates, if permitted
-  git:
+  ansible.builtin.git:
     dest: "{{ packer_templates_dir }}"
     repo: "{{ packer_templates_repo }}"
     version: "{{ packer_templates_branch }}"

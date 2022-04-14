@@ -4,7 +4,7 @@
 ## see:
 ## https://github.com/AnchorFree/packer-builder-vultr/blob/master/bintray.md
 - name: download plugin packer-builder-vultr
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ release_url }}/{{ web_file_name }}"
     dest: "{{ packer_plugin_dir }}"

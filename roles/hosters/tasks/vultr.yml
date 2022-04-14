@@ -11,7 +11,7 @@
   register: latest_vultr_release
 
 - name: download and unpack vultr cli
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_vultr_release.url }}"
     dest: "{{ devhost_vultr_binary |dirname }}"

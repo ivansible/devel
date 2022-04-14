@@ -1,6 +1,6 @@
 ---
 - name: setup user for development
-  include_role:
+  ansible.builtin.include_role:
     name: ivansible.devel.user
     apply:
       tags: divan_prepare_user
@@ -15,7 +15,7 @@
     - divan_all
 
 - name: install user-local ansible
-  include_role:
+  ansible.builtin.include_role:
     name: ivansible.devel.ansible
     apply:
       tags: divan_prepare_user
@@ -28,7 +28,7 @@
     - divan_all
 
 - name: install github cli
-  import_tasks: hub.yml
+  ansible.builtin.import_tasks: hub.yml
   become: true
   when: git_hub_release |d('')
   tags:
@@ -37,7 +37,7 @@
     - ip4only
 
 - name: checkout inventory and playbooks
-  git:
+  ansible.builtin.git:
     dest: "{{ divan_dir }}"
     repo: "{{ divan_repo }}"
     version: "{{ divan_branch }}"
@@ -53,7 +53,7 @@
     - divan_all
 
 - name: configure inventory git for push upstream
-  git_config:
+  community.general.git_config:
     repo: "{{ divan_dir }}"
     scope: local
     name: push.default
@@ -64,7 +64,7 @@
     - divan_all
 
 - name: symbolic links for ivantory
-  import_tasks: links.yml
+  ansible.builtin.import_tasks: links.yml
   tags:
     - divan_links
     - divan_all
@@ -72,7 +72,7 @@
 ## note: ansible requirements are already installed by ivansible.dev_ansible
 
 - name: decrypt repository
-  import_tasks: crypt.yml
+  ansible.builtin.import_tasks: crypt.yml
   when:
     - is_permitted |bool
     - divan_sops_age_recipients |d('')
@@ -81,7 +81,7 @@
     - divan_all
 
 - name: install required collections and roles
-  import_tasks: collections.yml
+  ansible.builtin.import_tasks: collections.yml
   when: is_permitted |bool
   tags:
     - divan_collections
@@ -89,7 +89,7 @@
 
 - name: set ssh for insecure developer login to vagrant boxes
   ## See: http://hakunin.com/six-ansible-practices
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ ansible_user_dir }}/.ssh/config"
     create: true
     mode: 0600

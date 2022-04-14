@@ -4,32 +4,32 @@
 - name: install system packages for ansible
   block:
     - name: install system packages (will update if it fails)
-      apt:
+      ansible.builtin.apt:
         name: "{{ dev_ansible_system_packages }}"
       become: true
       ## reduce long error message
       no_log: "{{ hide_secrets |bool }}"
   rescue:
     - name: install system packages (update cache)
-      apt:
+      ansible.builtin.apt:
         name: "{{ dev_ansible_system_packages }}"
         update_cache: true
       become: true
   tags: dev_ansible_packages
 
 - name: upload pip requirements
-  copy:
+  ansible.builtin.copy:
     src: requirements.txt
     dest: "{{ dev_ansible_package_list }}"
     force: true
     mode: 0644
 
 - name: check that ansible is installed
-  stat:
+  ansible.builtin.stat:
     path: "{{ dev_ansible_dir }}/site-packages/ansible/__init__.py"
   register: stat_ansible_package
 
 - name: setup virtual environment
-  import_tasks: venv.yml
+  ansible.builtin.import_tasks: venv.yml
   when: not stat_ansible_package.stat.exists
 ...

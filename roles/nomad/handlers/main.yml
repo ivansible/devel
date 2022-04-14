@@ -2,14 +2,14 @@
 # handlers for ivansible.dev_nomad
 
 - name: restart consul service
-  systemd:
+  ansible.builtin.systemd:
     name: consul
     state: restarted
     enabled: true
   become: true
 
 - name: restart nomad service
-  systemd:
+  ansible.builtin.systemd:
     name: nomad
     state: restarted
     enabled: true

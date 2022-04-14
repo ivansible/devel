@@ -1,6 +1,6 @@
 ---
 - name: update plugins when package/ppa was installed or reinstall is allowed
-  set_fact:
+  ansible.builtin.set_fact:
     plugins_need_update: "{{ deb_changed or ppa_changed or upgrade }}"
   vars:
     deb_changed: "{{ vagrant_deb_result |d({}) is changed }}"
@@ -8,43 +8,43 @@
     upgrade: "{{ vagrant_upgrade |bool }}"
 
 - name: repair vagrant plugins
-  command: vagrant plugin repair
+  ansible.builtin.command: vagrant plugin repair
   changed_when: false
   when: plugins_need_update |bool
 
 - name: update vagrant plugins
-  command: vagrant plugin update
+  ansible.builtin.command: vagrant plugin update
   changed_when: false
   when: plugins_need_update |bool
 
 - block:
     - name: list installed vagrant plugins
-      command: vagrant plugin list
+      ansible.builtin.command: vagrant plugin list
       changed_when: false
       register: plugin_list_result
   rescue:
     - name: expunge/reinstall vagrant plugins
-      command: vagrant expunge --reinstall
+      ansible.builtin.command: vagrant expunge --reinstall
       changed_when: false
     - name: list installed vagrant plugins after fix
-      command: vagrant plugin list
+      ansible.builtin.command: vagrant plugin list
       changed_when: false
       register: plugin_list_result
 
 - name: extract installed plugins from output
-  set_fact:
+  ansible.builtin.set_fact:
     plugins_present: "{{ plugin_list_result.stdout_lines
                        | select('match', '^vagrant-')
                        | map('regex_search', '^[^ ]+')
                        | list }}"
 
 - name: find plugins to install
-  set_fact:
+  ansible.builtin.set_fact:
     plugins_new: "{{ vagrant_plugin_list
                    | difference(plugins_present) }}"
 
 - name: display plugins to install
-  debug:
+  ansible.builtin.debug:
     msg:
       - "vagrant plugins:"
       - "required: {{ vagrant_plugin_list |join(',') }}"
@@ -54,6 +54,6 @@
 
 - name: install vagrant plugins
   # noqa 301
-  command: vagrant plugin install {{ item }}
+  ansible.builtin.command: vagrant plugin install {{ item }}
   loop: "{{ plugins_new }}"
 ...

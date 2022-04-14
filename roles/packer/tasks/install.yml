@@ -10,7 +10,7 @@
   register: _packer_release
 
 - name: download archived packer binary
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ _packer_release.url }}"
     dest: "{{ packer_binary |dirname }}"

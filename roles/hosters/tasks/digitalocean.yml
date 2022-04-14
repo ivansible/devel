@@ -11,21 +11,21 @@
   register: latest_doctl_release
 
 - name: download do-ctl
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_doctl_release.url }}"
     dest: "{{ devhost_doctl_binary |dirname }}"
   when: latest_doctl_release is changed
 
 - name: user-local bash completion for do-ctl
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ _devhost_user_bash_completions }}"
     line: "source <(doctl completion bash)"
   become: false
   when: _stat_user_bash_completions.stat.exists
 
 - name: system-global bash completion for digitalocean cli
-  copy:
+  ansible.builtin.copy:
     dest: /etc/profile.d/completion_doctl.sh
     content: |
       # bash completion for DigitalOcean CLI
@@ -40,7 +40,7 @@
 
 - name: authenticate with digital ocean
   # use transient environment variable to hide token from command line
-  shell: >
+  ansible.builtin.shell: >
     {{ devhost_doctl_binary }} auth init -t "$_digitalocean_token"
   args:
     creates: ~/.config/doctl/config.yaml

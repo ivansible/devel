@@ -1,6 +1,6 @@
 ---
 - name: install prerequisites for virtualbox kernel modules
-  apt:
+  ansible.builtin.apt:
     name:
       - linux-headers-generic
       - linux-headers-{{ ansible_kernel }}
@@ -9,17 +9,17 @@
       - dmg2img
 
 - name: add virtualbox signing key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
 - name: add virtualbox apt repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb http://download.virtualbox.org/virtualbox/debian {{ ansible_lsb.codename }} contrib"
     filename: virtualbox
     mode: 0644
     update_cache: true
 
 - name: install virtualbox package
-  apt:
+  ansible.builtin.apt:
     name: virtualbox-{{ virtualbox_version }}
 ...

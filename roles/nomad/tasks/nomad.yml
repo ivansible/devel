@@ -10,7 +10,7 @@
   register: _nomad_release
 
 - name: install nomad binary
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ _nomad_release.url }}"
     dest: "{{ nomad_binary |dirname }}"
@@ -21,7 +21,7 @@
   until: _nomad_download.msg |default('') is not search('timed out')
 
 - name: create nomad directories
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ item }}"
     owner: root
@@ -35,18 +35,18 @@
   block:
     - name: run nomad keygen
       # noqa no-changed-when
-      command: "{{ nomad_binary }} operator keygen"
+      ansible.builtin.command: "{{ nomad_binary }} operator keygen"
       register: _nomad_keygen_result
 
     - name: set fact with nomad encryption key
-      set_fact:
+      ansible.builtin.set_fact:
         nomad_encrypt_key: "{{ _nomad_keygen_result.stdout_lines.0 }}"
   when:
     - nomad_encrypt_enable |bool
     - not nomad_encrypt_key |default('')
 
 - name: configure nomad
-  template:
+  ansible.builtin.template:
     src: nomad/nomad.hcl
     dest: "{{ nomad_config_file }}"
     owner: root
@@ -60,7 +60,7 @@
     range_max: "{{ '%s-32000' % port_max if 0 < port_max |int < 32000 else '' }}"
 
 - name: create nomad service
-  template:
+  ansible.builtin.template:
     src: nomad/nomad.service
     dest: /etc/systemd/system/nomad.service
     mode: 0644
@@ -68,7 +68,7 @@
   notify: restart nomad service
 
 - name: enable nomad service
-  systemd:
+  ansible.builtin.systemd:
     name: nomad
     state: started
     enabled: true
@@ -107,14 +107,14 @@
 - name: nomad logging
   block:
     - name: create nomad log directory
-      file:
+      ansible.builtin.file:
         state: directory
         path: "{{ nomad_log_file |dirname }}"
         ## keep user/group set by consul task
         mode: 0775
 
     - name: ensure nomad log file exists
-      copy:
+      ansible.builtin.copy:
         dest: "{{ nomad_log_file }}"
         content: ""
         force: false
@@ -124,7 +124,7 @@
       notify: restart syslog service
 
     - name: configure syslog for nomad
-      copy:
+      ansible.builtin.copy:
         dest: /etc/rsyslog.d/34-nomad.conf
         content: |
           :programname,isequal,"nomad" {{ nomad_log_file }}
@@ -134,7 +134,7 @@
       notify: restart syslog service
 
     - name: rotate nomad log file
-      copy:
+      ansible.builtin.copy:
         dest: /etc/logrotate.d/nomad
         content: |
           {{ nomad_log_file }} {

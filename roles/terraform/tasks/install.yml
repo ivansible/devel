@@ -10,7 +10,7 @@
   register: _terraform_release
 
 - name: download archived terraform binary
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ _terraform_release.url }}"
     dest: "{{ terraform_binary |dirname }}"

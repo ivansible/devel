@@ -1,6 +1,6 @@
 ---
 - name: become root and install golang
-  import_tasks: root.yml
+  ansible.builtin.import_tasks: root.yml
   become: true
   when: lin_go_version |default('')
   tags: lin_go_all

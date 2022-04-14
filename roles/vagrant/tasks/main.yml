@@ -1,6 +1,6 @@
 ---
 - name: vagrant from ppa (not recommended)
-  apt:
+  ansible.builtin.apt:
     name: vagrant
   become: true
   when: vagrant_package_url == 'ppa'
@@ -9,14 +9,16 @@
     - dev_vaginstall
     - dev_vagrant
 
-- import_tasks: vagrant.yml
+- name: core vagrant tasks
+  ansible.builtin.import_tasks: vagrant.yml
   become: true
   when: vagrant_package_url != 'ppa'
   tags:
     - dev_vaginstall
     - dev_vagrant
 
-- import_tasks: plugins.yml
+- name: vagrant plugin tasks
+  ansible.builtin.import_tasks: plugins.yml
   become: false
   when: vagrant_plugin_list |length > 0
   tags:
@@ -24,7 +26,7 @@
     - dev_vagrant
 
 - name: checkout vagrant files, if permitted
-  git:
+  ansible.builtin.git:
     dest: "{{ vagrant_files_dir }}"
     repo: "{{ vagrant_files_repo }}"
     version: "{{ vagrant_files_branch }}"
@@ -40,7 +42,7 @@
 
 - name: authenticate with vagrant cloud (optional, so ok to fail)
   # use transient environment variable to hide token from command line
-  shell: vagrant cloud auth login -t $_vagrant_cloud_token
+  ansible.builtin.shell: vagrant cloud auth login -t $_vagrant_cloud_token
   args:
     creates: ~/.vagrant.d/data/vagrant_login_token
   environment:

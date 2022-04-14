@@ -2,7 +2,7 @@
 ## configure permitted users for terraform
 
 - name: configure terraform aliases (optional)
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.local/bashrc/4alias.sh
     line: "alias {{ item }}"
   ## skip this step if ivansible.dev_user wasn't installed
@@ -17,14 +17,14 @@
 - name: bash completion for terraform
   block:
     - name: user-local completion for terraform (will install globally if it fails)
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.local/bashrc/5completion.sh
         line: "complete -C {{ terraform_binary }} terraform"
       become: false
   rescue:
     ## fall back if ivansible.dev_user wasn't installed
     - name: system-global bash completion for terraform
-      copy:
+      ansible.builtin.copy:
         dest: /etc/profile.d/completion_terraform.sh
         content: |
           # bash completion for HashiCorp Terraform
@@ -38,7 +38,7 @@
 
 
 - name: checkout terraform plans, if permitted
-  git:
+  ansible.builtin.git:
     dest: "{{ terraform_plans_dir }}"
     repo: "{{ terraform_plans_repo }}"
     version: "{{ terraform_plans_branch }}"
@@ -49,7 +49,7 @@
   tags: dev_terraform_plans
 
 - name: setup terraform enterprise (free) token, if permitted
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.terraformrc
     create: true
     mode: 0600

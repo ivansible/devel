@@ -1,6 +1,6 @@
 ---
 - name: custom git configuration
-  template:
+  ansible.builtin.template:
     src: gitconfig.j2
     dest: ~/.gitconfig
     mode: 0640
@@ -8,7 +8,7 @@
   register: result_new_gitconfig
 
 - name: example git configuration
-  template:
+  ansible.builtin.template:
     src: gitconfig.j2
     dest: ~/.gitconfig.example
     mode: 0640
@@ -16,7 +16,7 @@
   register: result_gitconfig_example
 
 - name: warn about new gitconfig
-  debug:
+  ansible.builtin.debug:
     msg:
       - "Wrote new git configuration in ~/.gitconfig"
   when: result_new_gitconfig is changed
@@ -24,7 +24,7 @@
 
 - name: netrc file for git (optional)
   no_log: "{{ hide_secrets |bool }}"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.netrc
     line: "machine {{ item.host }} login {{ item.user }} password {{ item.pass }}"
     create: true

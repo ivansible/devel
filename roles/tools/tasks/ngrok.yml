@@ -1,13 +1,13 @@
 ---
 - name: by default the use of proxy is controlled by the target environment
-  set_fact:
+  ansible.builtin.set_fact:
     _ngrok_proxy_env: {}
 
 - name: use ngrok proxy from inventory, if any
   ## see example of conditional step environment syntax here:
   ## https://docs.ansible.com/ansible/latest/modules/uri_module.html#examples
   ## https://docs.ansible.com/ansible/latest/user_guide/playbooks_environment.html
-  set_fact:
+  ansible.builtin.set_fact:
     _ngrok_proxy_env:
       http_proxy: "{{ ngrok_zip_proxy }}"
       https_proxy: "{{ ngrok_zip_proxy }}"
@@ -15,7 +15,7 @@
   when: ngrok_zip_proxy |d('')
 
 - name: detect ngrok download location
-  uri:
+  ansible.builtin.uri:
     url: https://ngrok.com/download
     return_content: true
     creates: /usr/local/bin/ngrok
@@ -27,14 +27,14 @@
   when: ngrok_zip_url == 'latest'
 
 - name: extract ngrok download location
-  set_fact:
+  ansible.builtin.set_fact:
     ngrok_zip_url:
       "{{ ngrok_download_html.content
         | regex_search('https://[^\"]+ngrok-stable-linux-amd64.zip') }}"
   when: "'content' in ngrok_download_html"
 
 - name: install ngrok
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ ngrok_zip_url }}"
     dest: /usr/local/bin

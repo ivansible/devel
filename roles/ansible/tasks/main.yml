@@ -2,15 +2,15 @@
 - name: tasks for dev-ansible role
   block:
     - name: install ansible packages
-      import_tasks: install.yml
+      ansible.builtin.import_tasks: install.yml
       tags: dev_ansible_install
 
     - name: workaround for old ansible pre-installed on vagrant
-      import_tasks: old.yml
+      ansible.builtin.import_tasks: old.yml
       tags: dev_ansible_upgrade
 
     - name: apply patches to ansible, mitogen and molecule
-      import_tasks: patch.yml
+      ansible.builtin.import_tasks: patch.yml
       ## detection task produces no output in check mode
       when:
         - not ansible_check_mode
@@ -18,17 +18,17 @@
       tags: dev_ansible_patch
 
     - name: convenient links for user-local ansible binaries
-      import_tasks: links.yml
+      ansible.builtin.import_tasks: links.yml
       when: dev_ansible_link_dir |d('')
       tags: dev_ansible_links
 
     - name: convenient ansible aliases in users profile
-      import_tasks: aliases.yml
+      ansible.builtin.import_tasks: aliases.yml
       when: dev_ansible_update_bashrc |bool
       tags: dev_ansible_bashrc
 
     - name: setup syslog rules for ansible
-      import_tasks: syslog.yml
+      ansible.builtin.import_tasks: syslog.yml
       become: true
       when: dev_ansible_use_rsyslog |bool
       tags: dev_ansible_syslog

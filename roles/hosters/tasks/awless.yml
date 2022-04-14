@@ -10,13 +10,13 @@
   register: latest_awless_release
 
 - name: download awless
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ latest_awless_release.url }}"
     dest: "{{ devhost_awless_binary |dirname }}"
   when: latest_awless_release is changed
 
 - name: bash completion for awless
-  shell: awless completion bash > /etc/bash_completion.d/awless
+  ansible.builtin.shell: awless completion bash > /etc/bash_completion.d/awless
   when: latest_awless_release is changed
 ...

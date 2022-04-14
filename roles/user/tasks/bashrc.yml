@@ -1,24 +1,24 @@
 ---
 - name: ensure user shell is bash
-  user:
+  ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     shell: /bin/bash
   become: true
 
 - name: place for custom bash settings
-  file:
+  ansible.builtin.file:
     path: ~/.local/bashrc
     state: directory
     mode: 0755
 
 - name: source local settings from bashrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.bashrc
     line: "for bashlet in $(ls -1 ~/.local/bashrc/*.sh); do . $bashlet; done  # ansible-managed"
     regexp: "~/[.]local/bashrc/|[.]bashrc[.]local\\b"
 
 - name: perform cleanup on bash logout
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.bash_logout
     block: "{{ lookup('file', 'bashrc/logout.sh') }}"
     create: true
@@ -27,7 +27,7 @@
 - name: surgically implant interactive login block in bashrc
   block:
     - name: implant marker one of interactive block in bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bashrc
         line: "# == BEGIN {{ marker }} =="
         insertafter: "{{ point_one }}"
@@ -35,7 +35,7 @@
         validate: grep -Eq "{{ point_one }}" %s
 
     - name: implant marker two of interactive block in bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bashrc
         line: "# == END {{ marker }} =="
         insertbefore: "{{ point_two }}"
@@ -43,7 +43,7 @@
         validate: grep -Eq "{{ point_two }}" %s
 
     - name: implant interactive login block in bashrc
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: ~/.bashrc
         block: |+
           case "$_SSH_,$-" in
@@ -55,7 +55,7 @@
         marker: "# == {mark} {{ marker }} =="
   rescue:
     - name: revert interactive block markers from bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: ~/.bashrc
         regexp: "^# == (BEGIN|END) {{ marker }} =="
         state: absent
@@ -63,7 +63,7 @@
       until: _bashrc_remove_interactive_markers is not changed
 
     - name: failed to find place for interactive block in bashrc
-      fail:
+      ansible.builtin.fail:
         msg: failed to find place for interactive block in bashrc
   vars:
     point_one: "^# If not running interactively"
@@ -73,7 +73,7 @@
   tags: dev_user_ssh_interactive
 
 - name: bashrc environment variables (user)
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/1env.sh
     block: |
       {% for var in dev_user_all_vars |sort %}
@@ -87,7 +87,7 @@
   when: not is_molecule_test |bool
 
 - name: bashrc environment variables (common)
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/1env.sh
     block: |
       export BROWSER="firefox"
@@ -101,7 +101,7 @@
     mode: 0644
 
 - name: bashrc secrets (if permitted)
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/6secret.sh
     block: |
       {% if is_permitted |bool %}
@@ -116,7 +116,7 @@
   when: not is_molecule_test |bool
 
 - name: bashrc extra paths
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/2path.sh
     block: |
       if [ -n "${PATH##*{{ user_bin }}}" ] && [ -n "${PATH##*{{ user_bin }}:*}" ]; then
@@ -130,7 +130,7 @@
     user_bin: "{{ ansible_user_dir }}/bin"
 
 - name: bashrc local snippets
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/3common.sh
     block: "{{ lookup('file', 'bashrc/common.sh') }}"
     insertbefore: BOF
@@ -138,7 +138,7 @@
     mode: 0644
 
 - name: bashrc setup ssh-agent
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/3common.sh
     block: "{{ lookup('file', 'bashrc/ssh-agent.sh') }}"
     marker: "# == {mark} SETUP SSH-AGENT =="
@@ -147,7 +147,7 @@
     mode: 0644
 
 - name: bashrc aliases for user
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.local/bashrc/4alias.sh
     block: "{{ lookup('file', 'bashrc/alias.sh') }}"
     insertbefore: BOF
@@ -156,7 +156,7 @@
 
 - name: bashrc aliases for root
   become: true
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /root/.bashrc
     block: "{{ lookup('file', 'bashrc/alias.sh') }}"
     marker: "# == {mark} ANSIBLE ALIASES =="
@@ -166,7 +166,7 @@
   when: ansible_user_id != 'root'
 
 - name: bashrc place for completions
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.local/bashrc/5completion.sh
     line: "# put your completions here"
     insertbefore: BOF
@@ -174,13 +174,13 @@
     mode: 0644
 
 - name: add git completions for alias 'g'
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.local/bashrc/5completion.sh
     line: '__git_complete g __git_main 2>/dev/null'
     regexp: '^__git_complete g __git_main'
 
 - name: bashrc place for user snippets
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: ~/.local/bashrc/7user.sh
     line: "# put your snippets here"
     insertbefore: BOF

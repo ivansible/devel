@@ -2,7 +2,7 @@
 ## install 3rd-party terraform plugins
 
 - name: install plugin terraform-provider-vultr
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ release_url }}/{{ file_name }}_linux_amd64.tar.gz"
     dest: "{{ terraform_plugin_dir }}"
@@ -28,7 +28,7 @@
   when: terraform_provider_vultr_repo_owner |d('')
 
 - name: install plugin terraform-provisioner-ansible (from tarball)
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: "{{ release_url }}/{{ file_name }}_linux_amd64.zip"
     dest: "{{ terraform_plugin_dir }}"
@@ -57,7 +57,7 @@
     - terraform_provisioner_ansible_repo_owner |d('')
 
 - name: install plugin terraform-provisioner-ansible (as binary)
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ release_url }}/{{ web_file_name }}"
     dest: "{{ terraform_plugin_dir }}/{{ disk_file_name }}"
     mode: 0755
