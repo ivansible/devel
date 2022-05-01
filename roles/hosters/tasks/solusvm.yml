@@ -10,4 +10,24 @@
     dest: ~/.beam.ini
     mode: 0640
   become: false
+
+- name: setup cron jobs to restore solus machines
+  ansible.builtin.template:
+    src: solusvm-reboot.sh
+    dest: /etc/cron.hourly/solusvm-{{ name }}
+    owner: root
+    mode: 0755
+  loop: "{{ devhost_solusvm_servers |d([],true) }}"
+  loop_control:
+    label: "{{ name }}"
+  when:
+    - name |d('')
+    - ping |d('')
+    - item.auto_reboot |d(false) |bool
+  vars:
+    ping: "{{ item.ping |d('') }}"
+    name: "{{ item.name |d('') }}"
+    dir: "{{ ansible_user_dir }}"
+    ping_timeout_sec: 5
+  notify: reload systemd daemon
 ...

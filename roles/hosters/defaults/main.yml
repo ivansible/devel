@@ -33,4 +33,6 @@ devhost_solusvm_servers: ~
 #   host: https://solusvm.provider.com
 #   key: 12345-ABCDE-PQRST
 #   hash: 0123456789abcdef0123456789abcdef01234567
+#   ping: 192.168.99.99
+#   auto_reboot: false
 ...
