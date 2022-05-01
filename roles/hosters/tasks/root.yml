@@ -1,27 +1,32 @@
 ---
-- import_tasks: aws.yml
+- name: setup cli for aws
+  ansible.builtin.import_tasks: aws.yml
   tags: devhost_aws
   when: devhost_aws_enabled |bool
 
-- import_tasks: awless.yml
+- name: setup cli for awless
+  ansible.builtin.import_tasks: awless.yml
   tags: devhost_awless
   ## awless does not provide arm64 binaries yet
   when:
     - ansible_architecture == 'x86_64'
 
-- import_tasks: azure.yml
+- name: setup cli for azure
+  ansible.builtin.import_tasks: azure.yml
   tags: devhost_azure
   when:
     - devhost_azure_enabled |bool
     ## azure-cli is not available for bionic/arm64
     - ansible_architecture == 'x86_64' or ansible_lsb.release is version('20.04','>=')
 
-- import_tasks: digitalocean.yml
+- name: setup cli for digitalocean
+  ansible.builtin.import_tasks: digitalocean.yml
   tags:
     - devhost_digitalocean
     - devhost_do
 
-- import_tasks: heroku.yml
+- name: setup cli for heroku
+  ansible.builtin.import_tasks: heroku.yml
   tags: devhost_heroku
   when:
     - devhost_heroku_enabled |bool
@@ -29,17 +34,21 @@
     ## SEE  https://devcenter.heroku.com/articles/heroku-cli#tarballs
     - ansible_architecture == 'x86_64'
 
-- import_tasks: packet.yml
+- name: setup cli for equinix (ex packet)
+  ansible.builtin.import_tasks: packet.yml
   tags: devhost_packet
   when: devhost_packet_enabled |bool
 
-- import_tasks: vultr.yml
+- name: setup cli for vultr
+  ansible.builtin.import_tasks: vultr.yml
   tags: devhost_vultr
 
-- import_tasks: hetzner.yml
+- name: setup cli for hetzner
+  ansible.builtin.import_tasks: hetzner.yml
   tags: devhost_hetzner
 
-- import_tasks: solusvm.yml
+- name: setup cli for solusvm
+  ansible.builtin.import_tasks: solusvm.yml
   tags: devhost_solusvm
   when: devhost_solusvm_enabled |bool
 ...
